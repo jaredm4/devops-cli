@@ -4,3 +4,5 @@
 vendor
 composer.phar
 phpunit.xml
+
+bin
