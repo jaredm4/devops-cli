@@ -1,8 +1,7 @@
 .idea
 .DS_Store
 
+bin
 vendor
 composer.phar
 phpunit.xml
-
-bin
