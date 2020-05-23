@@ -3,9 +3,14 @@
 
 require __DIR__ . '/vendor/autoload.php';
 
+use Monolog\ErrorHandler;
+use Monolog\Handler\PsrHandler;
+use Monolog\Logger;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\Console\Application;
 use Symfony\Component\Console\Command\Command;
+use Symfony\Component\Console\Logger\ConsoleLogger;
+use Symfony\Component\Console\Output\ConsoleOutput;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Loader\YamlFileLoader;
 
@@ -17,7 +22,22 @@ $loader = new YamlFileLoader($containerBuilder, new FileLocator(__DIR__ . '/conf
 $loader->load('services.yaml');
 $containerBuilder->compile();
 
-# Setup the Application
+# Pre-emptive creation of the console output handler so we can feed it to Monolog early
+# solves an issue where events get logged before Symfony's listeners fire off, causing double errors
+$output = new ConsoleOutput();
+
+/** @var Logger $logger */
+$logger = $containerBuilder->get('Monolog\Logger');
+# By adding the output consolelogger early, can prevent Monolog from creating its own StreamHandler which can happen if
+# logs get created before a handler exists.
+$consoleLogger = new ConsoleLogger($output);
+$logger->pushHandler(new PsrHandler($consoleLogger));
+# Enables PHP errors to get to third party logging services
+ErrorHandler::register($logger);
+# At this point, we can disable php errors since Monolog will handle them (prevents duplicates)
+ini_set('display_errors', 'Off');
+
+# Set up the Application
 $application = new Application('Devops');
 
 # Find all Commands in the container, add to Application.
@@ -27,4 +47,4 @@ foreach ($containerBuilder->findTaggedServiceIds('console.command') as $serviceI
     $application->add($command);
 }
 
-$application->run();
+$application->run(null, $output);

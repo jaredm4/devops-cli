@@ -2,6 +2,8 @@
 .DS_Store
 
 bin
+logs
 vendor
+config/parameters.yaml
 composer.phar
 phpunit.xml
