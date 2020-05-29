@@ -7,3 +7,5 @@ vendor
 config/parameters.yaml
 composer.phar
 phpunit.xml
+.php_cs
+.php_cs.cache
