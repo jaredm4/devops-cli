@@ -1,3 +1,3 @@
 parameters:
   log_file_path: ./logs/devops.log
-  log_file_verbosity: !php/const Monolog\Logger::WARNING
+  log_file_verbosity: !php/const Monolog\Logger::NOTICE

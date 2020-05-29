@@ -1,21 +1,20 @@
 <?php declare(strict_types=1);
 
-use Devops\Command\HelloWorldCommand;
-use Monolog\Handler\PsrHandler;
-use Monolog\Logger;
-use Monolog\Processor\UidProcessor;
+namespace Devops\Command;
+
 use PHPUnit\Framework\TestCase;
+use Psr\Log\AbstractLogger;
 use Psr\Log\NullLogger;
 use Symfony\Component\Console\Application;
 use Symfony\Component\Console\Tester\CommandTester;
 
 final class HelloWorldCommandTest extends TestCase
 {
-    private Logger $logger;
+    private AbstractLogger $logger;
 
     protected function setUp(): void
     {
-        $this->logger = new Logger('test', [new PsrHandler(new NullLogger())], [new UidProcessor()]);
+        $this->logger = $this->createMock(NullLogger::class);
     }
 
     public function testOutputsHelloWorld(): void
@@ -26,9 +25,9 @@ final class HelloWorldCommandTest extends TestCase
 
         $commandTester = new CommandTester($command);
         $commandTester->execute([]);
-
-        // the output of the command in the console
         $output = $commandTester->getDisplay();
+
+        $this->assertEquals(0, $commandTester->getStatusCode());
         $this->assertStringContainsString('Hello, world.', $output);
     }
     public function testOutputsHelloName(): void
@@ -41,9 +40,27 @@ final class HelloWorldCommandTest extends TestCase
         $commandTester->execute([
             '--name' => 'John',
         ]);
-
-        // the output of the command in the console
         $output = $commandTester->getDisplay();
+
+        $this->assertEquals(0, $commandTester->getStatusCode());
         $this->assertStringContainsString('Hello, John.', $output);
+    }
+    public function testLogging(): void
+    {
+        $this->logger->expects($this->once())->method('debug');
+        $this->logger->expects($this->once())->method('info');
+        $this->logger->expects($this->once())->method('notice');
+        $this->logger->expects($this->once())->method('warning');
+        $this->logger->expects($this->once())->method('error');
+        $this->logger->expects($this->once())->method('critical');
+        $this->logger->expects($this->once())->method('alert');
+        $this->logger->expects($this->once())->method('emergency');
+
+        $application = new Application();
+        $application->add(new HelloWorldCommand($this->logger));
+        $command = $application->find('test');
+
+        $commandTester = new CommandTester($command);
+        $commandTester->execute([]);
     }
 }
