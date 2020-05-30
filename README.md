@@ -1,4 +1,4 @@
-#Devops
+# Devops
 
 ## Preface
 This is a rewrite of a proprietary devops tool I wrote for a company. The goal is to remove a lot of the company-specific business logic while keeping the guts in-tact.
@@ -17,12 +17,12 @@ For the foreseeable future, no. This is a working code sample for me. Maybe in t
 composer install
 ```
 
-## Testing
+### Testing
 ```bash
 vendor/bin/phpunit tests
 ```
 
-## Code Quality
+### Code Quality
 Install [FriendsOfPHP/PHP-CS-Fixer](https://github.com/FriendsOfPHP/PHP-CS-Fixer) to your path (recommended `brew install php-cs-fixer`).
 
 ```bash
