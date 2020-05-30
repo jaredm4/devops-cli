@@ -26,6 +26,9 @@ class HelloWorldCommand extends Command
     {
         $this
             ->setDescription('Hello world sample to ensure configuration is setup correctly.')
+            ->setHelp('A command to help diagnose configuration issues.'.
+                ' Useful to ensuring configuration, logging and chatops are operating as expected.'.
+                ' Will not perform any writes, builds or deployments.')
             ->addOption('name', null, InputOption::VALUE_OPTIONAL, 'What is your name?', 'world');
     }
 
