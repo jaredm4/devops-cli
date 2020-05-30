@@ -6,21 +6,15 @@ require __DIR__ . '/vendor/autoload.php';
 use Monolog\ErrorHandler;
 use Monolog\Handler\PsrHandler;
 use Monolog\Logger;
-use Symfony\Component\Config\FileLocator;
 use Symfony\Component\Console\Application;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Logger\ConsoleLogger;
 use Symfony\Component\Console\Output\ConsoleOutput;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
-use Symfony\Component\DependencyInjection\Loader\YamlFileLoader;
 
 # Create the container
-$containerBuilder = new ContainerBuilder();
-// make container aware of console commands for autoconfigure
-$containerBuilder->registerForAutoconfiguration(Command::class)->addTag('console.command');
-$loader = new YamlFileLoader($containerBuilder, new FileLocator(__DIR__ . '/config'));
-$loader->load('services.yaml');
-$containerBuilder->compile();
+/** @var ContainerBuilder $containerBuilder */
+$containerBuilder = require __DIR__.'/config/container.php';
 
 # Pre-emptive creation of the console output handler so we can feed it to Monolog early
 # solves an issue where events get logged before Symfony's listeners fire off, causing double errors

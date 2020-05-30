@@ -1,3 +1,10 @@
 parameters:
-  log_file_path: ./logs/devops.log
+  doctrine.orm.connection:
+    driver: pdo_sqlite
+    path: "%root_dir%/db.sqlite"
+  doctrine.orm.entity_dir: "%root_dir%/src/Entity"
+  doctrine.orm.dev_mode: true
+  doctrine.orm.proxy_dir: ~
+  doctrine.orm.use_simple_annotation_reader: false
+  log_file_path: "%root_dir%/logs/devops.log"
   log_file_verbosity: !php/const Monolog\Logger::NOTICE

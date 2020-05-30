@@ -19,7 +19,7 @@ composer install
 
 ## Testing
 ```bash
-./bin/phpunit tests
+vendor/bin/phpunit tests
 ```
 
 ## Code Quality

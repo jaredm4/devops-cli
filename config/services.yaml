@@ -11,6 +11,20 @@ services:
     resource: '../src/*'
     exclude: '../src/{DependencyInjection,Entity,Migrations,Tests,Kernel.php}'
 
+  ### DOCTRINE
+  Doctrine\ORM\Configuration:
+    factory: [Doctrine\ORM\Tools\Setup, createAnnotationMetadataConfiguration]
+    arguments:
+      - ['%doctrine.orm.entity_dir%']
+      - '%doctrine.orm.dev_mode%'
+      - '%doctrine.orm.proxy_dir%'
+      - ~
+      - '%doctrine.orm.use_simple_annotation_reader%'
+  Doctrine\ORM\EntityManager:
+    factory: [Doctrine\ORM\EntityManager, create]
+    arguments:
+      - '%doctrine.orm.connection%'
+      - '@Doctrine\ORM\Configuration'
   ### MONOLOG
   Monolog\Logger:
     arguments:
@@ -20,8 +34,8 @@ services:
       - [pushProcessor, ['@Monolog\Processor\UidProcessor']]
   Monolog\Handler\StreamHandler:
     arguments:
-      - "%log_file_path%"
-      - "%log_file_verbosity%"
+      - '%log_file_path%'
+      - '%log_file_verbosity%'
   Monolog\Processor\UidProcessor: ~
   Psr\Log\LoggerInterface:
     alias: Monolog\Logger
