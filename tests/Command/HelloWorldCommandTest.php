@@ -1,4 +1,6 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
 
 namespace Devops\Command;
 
@@ -30,6 +32,7 @@ final class HelloWorldCommandTest extends TestCase
         $this->assertEquals(0, $commandTester->getStatusCode());
         $this->assertStringContainsString('Hello, world.', $output);
     }
+
     public function testOutputsHelloName(): void
     {
         $application = new Application();
@@ -45,6 +48,7 @@ final class HelloWorldCommandTest extends TestCase
         $this->assertEquals(0, $commandTester->getStatusCode());
         $this->assertStringContainsString('Hello, John.', $output);
     }
+
     public function testLogging(): void
     {
         $this->logger->expects($this->once())->method('debug');

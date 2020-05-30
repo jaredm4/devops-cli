@@ -1,4 +1,6 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
 
 namespace Devops\Command;
 
@@ -30,7 +32,7 @@ class HelloWorldCommand extends Command
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $name = $input->getOption('name');
-        # Using $output should be rare. Use logger for cli output so it can go to multiple destinations (log aggregator, slack, etc).
+        // Using $output should be rare. Use logger for cli output so it can go to multiple destinations (log aggregator, slack, etc).
         $output->writeln("Hello, ${name}.");
 
         $this->logger->debug('Test debug log.', [new \RuntimeException('Faux runtime exception.')]);
