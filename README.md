@@ -24,7 +24,9 @@ vendor/bin/doctrine orm:schema-tool:update --force --dump-sql
 
 ### Testing
 ```bash
-vendor/bin/phpunit tests
+vendor/bin/pest
+# optinonally with XDEBUG 2.0+, or PCOV, or PHPDBG installed, generate coverage:
+vendor/bin/pest --coverage --min=90
 ```
 
 ### Code Quality

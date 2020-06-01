@@ -27,7 +27,7 @@ class CreateReleaseCommand extends Command
         Releases are what get deployed in deploy:deploy.
         HELP;
 
-    public function __construct(LoggerInterface $logger, EntityManager $entityManager, ReleaseResource $releaseResource)
+    public function __construct(LoggerInterface $logger, ReleaseResource $releaseResource, EntityManager $entityManager)
     {
         $this->logger = $logger;
         $this->entityManager = $entityManager;
