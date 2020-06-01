@@ -13,7 +13,8 @@ use Symfony\Component\Console\Output\OutputInterface;
 
 class CreateReleaseCommand extends Command
 {
-    protected static string $defaultName = 'release:create';
+    /** @var string|null The command name */
+    protected static $defaultName = 'release:create';
 
     private LoggerInterface $logger;
     private EntityManager $entityManager;

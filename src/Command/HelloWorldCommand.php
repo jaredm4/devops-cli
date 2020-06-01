@@ -12,7 +12,8 @@ use Symfony\Component\Console\Output\OutputInterface;
 
 class HelloWorldCommand extends Command
 {
-    protected static string $defaultName = 'test';
+    /** @var string|null The command name */
+    protected static $defaultName = 'test';
 
     private LoggerInterface $logger;
 
