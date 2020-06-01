@@ -12,7 +12,9 @@ Because PHP is not as singular focused as some make it out to be. Symfony is an 
 ### Should I use this?
 For the foreseeable future, no. This is a working code sample for me. Maybe in the future I'll throw it out for more adoption.
 
-## Installation
+## Usage
+
+### Installation
 ```bash
 composer install
 ```
