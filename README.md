@@ -13,10 +13,13 @@ Because PHP is not as singular focused as some make it out to be. Symfony is an 
 For the foreseeable future, no. This is a working code sample for me. Maybe in the future I'll throw it out for more adoption.
 
 ## Usage
+By default, this tool will use SQLite to manage releases and deploys. For production environments, it is recommended to use a better persistent data storage with redundancy and backups. Database configuration will be found in config/parameters.yaml.
 
 ### Installation
 ```bash
+cp config/parameters.yaml.dist config/parameters.yaml
 composer install
+vendor/bin/doctrine orm:schema-tool:update --force --dump-sql
 ```
 
 ### Testing
