@@ -13,6 +13,9 @@ use Symfony\Component\Console\Output\OutputInterface;
 
 class ReleaseCreateCommand extends Command
 {
+    use DateHelperTrait;
+    use ReleaseViewHelperTrait;
+
     /** @var string|null The command name */
     protected static $defaultName = 'release:create';
 
@@ -50,6 +53,8 @@ class ReleaseCreateCommand extends Command
         $this->entityManager->flush();
 
         $this->logger->notice('Release created.', [$release->getId(), $release->getCreated()]);
+
+        $this->renderReleaseTable($output, [$release]);
 
         return 0;
     }

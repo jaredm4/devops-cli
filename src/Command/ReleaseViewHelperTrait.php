@@ -17,7 +17,7 @@ use Symfony\Component\Console\Output\OutputInterface;
 trait ReleaseViewHelperTrait
 {
     /**
-     * Renders a list of builds in a vertical format. The standard format did not support HipChat well when there is
+     * Renders a list of releases in a vertical format. The standard format did not support HipChat well when there is
      * a lot of data to display.
      *
      * @param OutputInterface $output

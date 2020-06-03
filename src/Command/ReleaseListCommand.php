@@ -49,10 +49,10 @@ class ReleaseListCommand extends Command
     {
         $limit = $this->validateAndTransformInt($input->getOption('limit'));
 
-        /** @var ReleaseEntity[] $builds */
-        $builds = $this->releaseResource->getReleases($limit);
+        /** @var ReleaseEntity[] $releases */
+        $releases = $this->releaseResource->getReleases($limit);
 
-        $this->renderReleaseTable($output, $builds);
+        $this->renderReleaseTable($output, $releases);
 
         return 0;
     }

@@ -15,7 +15,11 @@ services:
   Devops\Display\DateTimeZone:
     class: DateTimeZone
     arguments: ["%display.datetime.timezone%"]
-  # Additional wiring for auto-wired objects.
+  # Additional custom wiring for auto-wired objects.
+  Devops\Command\ReleaseCreateCommand:
+    calls:
+      - [setDateTimeZone, ['@Devops\Display\DateTimeZone']]
+      - [setDateTimeFormat, ['%display.datetime.format%']]
   Devops\Command\ReleaseListCommand:
     calls:
       - [setDateTimeZone, ['@Devops\Display\DateTimeZone']]
