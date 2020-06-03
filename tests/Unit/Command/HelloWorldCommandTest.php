@@ -38,14 +38,14 @@ it('outputs hello john', function () {
 });
 
 it('logs each type of severity', function () {
-    $this->logger->shouldReceive('debug')->once();
-    $this->logger->shouldReceive('info')->once();
-    $this->logger->shouldReceive('notice')->once();
-    $this->logger->shouldReceive('warning')->once();
-    $this->logger->shouldReceive('error')->once();
-    $this->logger->shouldReceive('critical')->once();
-    $this->logger->shouldReceive('alert')->once();
-    $this->logger->shouldReceive('emergency')->once();
+    $this->logger->expects('debug')->once();
+    $this->logger->expects('info')->once();
+    $this->logger->expects('notice')->once();
+    $this->logger->expects('warning')->once();
+    $this->logger->expects('error')->once();
+    $this->logger->expects('critical')->once();
+    $this->logger->expects('alert')->once();
+    $this->logger->expects('emergency')->once();
 
     $command = $this->application->find('test');
     $commandTester = new CommandTester($command);

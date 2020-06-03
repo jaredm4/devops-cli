@@ -1,4 +1,8 @@
 parameters:
+  # Format to display dates and times in on the CLI. Note: Does not change how dates are stored, which are always UTC.
+  display.datetime.format: !php/const DateTime::RFC2822
+  display.datetime.timezone: America/Los_Angeles
+  # Doctrine configuration for storing Release data.
   doctrine.orm.connection:
     driver: pdo_sqlite
     path: "%root_dir%/db.sqlite"
@@ -6,5 +10,6 @@ parameters:
   doctrine.orm.dev_mode: true
   doctrine.orm.proxy_dir: ~
   doctrine.orm.use_simple_annotation_reader: false
+  # Where to write physical log files.
   log_file_path: "%root_dir%/logs/devops.log"
   log_file_verbosity: !php/const Monolog\Logger::NOTICE

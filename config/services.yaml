@@ -11,6 +11,16 @@ services:
     resource: '../src/*'
     exclude: '../src/{DependencyInjection,Entity,Migrations,Tests,Kernel.php}'
 
+  # Support functionality for assisting in output display preferences.
+  Devops\Display\DateTimeZone:
+    class: DateTimeZone
+    arguments: ["%display.datetime.timezone%"]
+  # Additional wiring for auto-wired objects.
+  Devops\Command\ReleaseListCommand:
+    calls:
+      - [setDateTimeZone, ['@Devops\Display\DateTimeZone']]
+      - [setDateTimeFormat, ['%display.datetime.format%']]
+
   ### DOCTRINE
   Doctrine\ORM\Configuration:
     factory: [Doctrine\ORM\Tools\Setup, createAnnotationMetadataConfiguration]
