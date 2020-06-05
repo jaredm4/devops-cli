@@ -11,6 +11,11 @@ services:
     resource: '../src/*'
     exclude: '../src/{DependencyInjection,Entity,Migrations,Tests,Kernel.php}'
 
+  _instanceof:
+    # apply tags to necessary services
+    Symfony\Component\Console\Command\Command:
+      tags: ['console.command']
+
   # Support functionality for assisting in output display preferences.
   Devops\Display\DateTimeZone:
     class: DateTimeZone
