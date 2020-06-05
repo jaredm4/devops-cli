@@ -29,6 +29,10 @@ services:
     calls:
       - [setDateTimeZone, ['@Devops\Display\DateTimeZone']]
       - [setDateTimeFormat, ['%display.datetime.format%']]
+  Devops\EventListener\LoggingListener:
+    tags:
+      - { name: console.event_listener, event: !php/const Symfony\Component\Console\ConsoleEvents::COMMAND,   method: logCommandName }
+      - { name: console.event_listener, event: !php/const Symfony\Component\Console\ConsoleEvents::TERMINATE, method: logCommandStatus }
 
   ### DOCTRINE
   Doctrine\ORM\Configuration:
