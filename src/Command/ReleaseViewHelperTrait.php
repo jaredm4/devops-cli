@@ -12,7 +12,6 @@ use Symfony\Component\Console\Output\OutputInterface;
 /**
  * Trait ReleaseViewHelperTrait
  * Aids in rendering releases in tables.
- * @package Devops\Command
  */
 trait ReleaseViewHelperTrait
 {
@@ -20,7 +19,6 @@ trait ReleaseViewHelperTrait
      * Renders a list of releases in a vertical format. The standard format did not support HipChat well when there is
      * a lot of data to display.
      *
-     * @param OutputInterface $output
      * @param Release[] $releases
      */
     protected function renderReleaseTable(OutputInterface $output, array $releases): void

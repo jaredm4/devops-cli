@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 use Devops\Command\ReleaseListCommand;
 use Devops\Entity\Release as ReleaseEntity;
 use Devops\Resource\Release as ReleaseResource;

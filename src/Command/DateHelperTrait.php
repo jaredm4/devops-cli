@@ -25,7 +25,6 @@ trait DateHelperTrait
 
     /**
      * @required
-     * @param DateTimeZone $dateTimeZone
      */
     public function setDateTimeZone(DateTimeZone $dateTimeZone): void
     {
@@ -39,7 +38,6 @@ trait DateHelperTrait
 
     /**
      * @required
-     * @param string $dateTimeFormat
      */
     public function setDateTimeFormat(string $dateTimeFormat): void
     {

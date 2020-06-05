@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 use Devops\Entity\Release;
 
 it('returns id', function () {

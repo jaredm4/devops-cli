@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Devops\Command;
 
 use Symfony\Component\Console\Exception\InvalidOptionException;
@@ -7,13 +9,11 @@ use Symfony\Component\Console\Exception\InvalidOptionException;
 /**
  * Trait TransformerTrait
  * Adds custom validation and transformation to Console Input options and arguments.
- * @package Devops\Command
  */
 trait TransformerTrait
 {
     /**
      * @param string|int $value
-     * @return int
      */
     protected function validateAndTransformInt($value): int
     {

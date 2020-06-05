@@ -18,7 +18,6 @@ class Release
     }
 
     /**
-     * @return ReleaseEntity
      * @throws ORMException
      */
     public function createRelease(): ReleaseEntity
@@ -31,7 +30,6 @@ class Release
 
     /**
      * @param int|null $limit Optionally limit the number of results to the last $limit rows
-     * @return array
      */
     public function getReleases(int $limit = null): array
     {
