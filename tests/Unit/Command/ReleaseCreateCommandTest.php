@@ -41,6 +41,6 @@ it('creates release with resource', function () {
     $commandTester->execute([]);
     $output = $commandTester->getDisplay();
 
-    assertStringEqualsFile('tests/fixtures/Command/release_create_command_0.txt', $output);
+    assertStringEqualsFile('tests/fixtures/Unit/Command/release_create_command_0.txt', $output);
     assertEquals(0, $commandTester->getStatusCode());
 });

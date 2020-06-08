@@ -50,7 +50,7 @@ it('displays list of Releases', function () {
     $commandTester->execute([]);
     $output = $commandTester->getDisplay();
 
-    assertStringEqualsFile('tests/fixtures/Command/release_list_command_0.txt', $output);
+    assertStringEqualsFile('tests/fixtures/Unit/Command/release_list_command_0.txt', $output);
     assertEquals(0, $commandTester->getStatusCode());
 });
 
@@ -70,7 +70,7 @@ it('displays table of Releases', function () {
     ]);
     $output = $commandTester->getDisplay();
 
-    assertStringEqualsFile('tests/fixtures/Command/release_list_command_1.txt', $output);
+    assertStringEqualsFile('tests/fixtures/Unit/Command/release_list_command_1.txt', $output);
     assertEquals(0, $commandTester->getStatusCode());
 });
 
@@ -92,6 +92,6 @@ it('displays json output of Releases', function () {
     ]);
     $output = $commandTester->getDisplay();
 
-    assertStringEqualsFile('tests/fixtures/Command/release_list_command_2.txt', $output);
+    assertStringEqualsFile('tests/fixtures/Unit/Command/release_list_command_2.txt', $output);
     assertEquals(0, $commandTester->getStatusCode());
 });
