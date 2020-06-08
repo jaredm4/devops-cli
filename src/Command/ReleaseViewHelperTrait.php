@@ -49,8 +49,7 @@ trait ReleaseViewHelperTrait
     /**
      * Renders a standard table layout of Releases with headers on top.
      *
-     * @param OutputInterface $output
-     * @param array $releases
+     * @param Release[] $releases
      */
     protected function renderReleaseTable(OutputInterface $output, array $releases): void
     {

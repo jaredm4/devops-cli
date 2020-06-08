@@ -58,7 +58,7 @@ class Release implements JsonSerializable
     {
         return [
             'id' => $this->id,
-            'created'=> $this->created->format(DateTime::RFC3339_EXTENDED),
+            'created' => $this->created->format(DateTime::RFC3339_EXTENDED),
         ];
     }
 }
