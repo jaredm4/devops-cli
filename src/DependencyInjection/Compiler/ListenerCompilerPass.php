@@ -21,7 +21,7 @@ class ListenerCompilerPass implements CompilerPassInterface
         $this->dispatcher = $dispatcher;
     }
 
-    public function process(ContainerBuilder $container)
+    public function process(ContainerBuilder $container): void
     {
         foreach ($container->findTaggedServiceIds('console.event_listener') as $id => $tags) {
             foreach ($tags as $tag) {
