@@ -9,6 +9,7 @@ use Doctrine\ORM\EntityManager;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
+use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 
 class ReleaseCreateCommand extends Command
@@ -43,7 +44,8 @@ class ReleaseCreateCommand extends Command
     {
         $this
             ->setDescription($this->descriptionText)
-            ->setHelp($this->helpText);
+            ->setHelp($this->helpText)
+            ->addOption('branch', 'b', InputOption::VALUE_REQUIRED, 'NYI: Branch to point the Release to', 'master');
     }
 
     protected function execute(InputInterface $input, OutputInterface $output): int

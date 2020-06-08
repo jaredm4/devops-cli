@@ -16,7 +16,7 @@ class ReleaseListCommand extends Command
 {
     use DateHelperTrait;
     use ReleaseViewHelperTrait;
-    use TransformerTrait;
+    use ValidatorTrait;
 
     /** @var string|null The command name */
     protected static $defaultName = 'release:list';
@@ -28,6 +28,7 @@ class ReleaseListCommand extends Command
     private string $helpText = <<<'HELP'
         Lists all created Releases and their statuses, most recent first.
         HELP;
+    private array $outputFormats = ['table', 'list', 'json'];
 
     public function __construct(LoggerInterface $logger, ReleaseResource $releaseResource)
     {
@@ -42,13 +43,14 @@ class ReleaseListCommand extends Command
         $this
             ->setDescription($this->descriptionText)
             ->setHelp($this->helpText)
-            ->addOption('limit', 'l', InputOption::VALUE_OPTIONAL, 'Limit the number of results displayed to this amount.', 10)
-            ->addOption('format', 'f', InputOption::VALUE_REQUIRED, 'How to return or display the results. Available options are: table, list, json.', 'list');
+            ->addOption('limit', 'l', InputOption::VALUE_REQUIRED, 'Limit the number of results displayed to this amount', 10)
+            ->addOption('format', 'f', InputOption::VALUE_REQUIRED, 'How to return or display the results. Available options are: '.json_encode($this->outputFormats), 'list');
     }
 
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
-        $limit = $this->validateAndTransformInt($input->getOption('limit'));
+        $limit = $this->validateAndTransformInt($input->getOption('limit'), '--limit should be a non-zero positive integer.');
+        $this->validateOptionSet($input->getOption('format'), $this->outputFormats, '--format should be one of '.json_encode($this->outputFormats));
 
         /** @var ReleaseEntity[] $releases */
         $releases = $this->releaseResource->getReleases($limit);
