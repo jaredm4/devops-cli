@@ -17,10 +17,24 @@ By default, this tool will use SQLite to manage releases and deploys. For produc
 
 ### Installation
 ```bash
-cp config/parameters.yaml.dist config/parameters.yaml
 composer install
+# setup database schema, using SQLite by default (see config/parameters.yaml)
 vendor/bin/doctrine orm:schema-tool:update --force --dump-sql
 ```
+
+### Basic Usage
+To see all available commands to you, use `./devops list`. To narrow it down to a specific namespace, `./devops list release`.
+
+#### Releases
+A Release is a snapshot of your application at the time the Release was created. It maps the Git SHA1s of all your code repositories to a single entity (release). Usually, this is the latest version of the master branch of all those repositories.
+
+Releases can also point to a specific branch name instead of master. This is useful for having a deployable Release for QA or Dev purposes only. If the branch name does not exist on a repository, it will default to master. If the branch isn't found on any repository, it should throw an error.
+
+Metadata for Releases can contain properties like:
+* "Master" if a Release is only using master branches. A Release that is not a Master can never go to Production.
+* "Releasable" if a Release has been tested and vetted for deployment to Production. Meaning all tests (automated and UAT) have passed.
+
+Create a Release with `./devops release:create`. List the latest releases with `./devops release:list`.
 
 ### Testing
 ```bash
