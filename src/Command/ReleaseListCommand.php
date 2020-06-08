@@ -42,7 +42,8 @@ class ReleaseListCommand extends Command
         $this
             ->setDescription($this->descriptionText)
             ->setHelp($this->helpText)
-            ->addOption('limit', 'l', InputOption::VALUE_OPTIONAL, 'Restrict number of results to this amount.', 10);
+            ->addOption('limit', 'l', InputOption::VALUE_OPTIONAL, 'Limit the number of results displayed to this amount.', 10)
+            ->addOption('format', 'f', InputOption::VALUE_REQUIRED, 'How to return or display the results. Available options are: table, list, json.', 'list');
     }
 
     protected function execute(InputInterface $input, OutputInterface $output): int
@@ -52,7 +53,17 @@ class ReleaseListCommand extends Command
         /** @var ReleaseEntity[] $releases */
         $releases = $this->releaseResource->getReleases($limit);
 
-        $this->renderReleaseTable($output, $releases);
+        switch ($input->getOption('format')) {
+            case 'table':
+                $this->renderReleaseTable($output, $releases);
+                break;
+            case 'list':
+                $this->renderReleaseList($output, $releases);
+                break;
+            case 'json':
+            default:
+                $output->write(json_encode($releases));
+        }
 
         return 0;
     }

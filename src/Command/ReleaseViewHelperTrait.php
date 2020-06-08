@@ -16,12 +16,12 @@ use Symfony\Component\Console\Output\OutputInterface;
 trait ReleaseViewHelperTrait
 {
     /**
-     * Renders a list of releases in a vertical format. The standard format did not support HipChat well when there is
-     * a lot of data to display.
+     * Renders a table of Releases in a list format, headers on left. This can be useful when there are many columns and
+     * horizontal space is limited.
      *
      * @param Release[] $releases
      */
-    protected function renderReleaseTable(OutputInterface $output, array $releases): void
+    protected function renderReleaseList(OutputInterface $output, array $releases): void
     {
         $table = new Table($output);
         $count = 0;
@@ -32,15 +32,35 @@ trait ReleaseViewHelperTrait
             }
             $table->addRow([
                 implode("\n", [
-                    'Id',
-                    //'Master',
-                    'Created',
+                    '<fg=green>Id</>',
+                    //'<fg=green>Master</>',
+                    '<fg=green>Created</>',
                 ]),
                 implode("\n", [
                     $release->getId(),
                     //$release->isMaster() ? 'X' : '', // TBD
                     $release->getCreated()->setTimezone($this->getDateTimeZone())->format($this->getDateTimeFormat()),
                 ]),
+            ]);
+        }
+        $table->render();
+    }
+
+    /**
+     * Renders a standard table layout of Releases with headers on top.
+     *
+     * @param OutputInterface $output
+     * @param array $releases
+     */
+    protected function renderReleaseTable(OutputInterface $output, array $releases): void
+    {
+        $table = new Table($output);
+        $table->setHeaderTitle('Releases');
+        $table->setHeaders(['Id', 'Created']);
+        foreach ($releases as $release) {
+            $table->addRow([
+                $release->getId(),
+                $release->getCreated()->setTimezone($this->getDateTimeZone())->format($this->getDateTimeFormat()),
             ]);
         }
         $table->render();

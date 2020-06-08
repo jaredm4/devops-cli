@@ -54,7 +54,7 @@ class ReleaseCreateCommand extends Command
 
         $this->logger->notice('Release created.', [$release->getId(), $release->getCreated()]);
 
-        $this->renderReleaseTable($output, [$release]);
+        $this->renderReleaseList($output, [$release]);
 
         return 0;
     }

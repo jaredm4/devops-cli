@@ -1,5 +1,9 @@
 #!/usr/bin/env php
 <?php declare(strict_types=1);
+/*
+ * This cli entrypoint sets up the Symfony Console Application and all its dependencies.
+ * Some of this code is to replace functionality built into the Symfony kernel that we aren't using.
+ */
 
 require __DIR__ . '/vendor/autoload.php';
 

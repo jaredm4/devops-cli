@@ -1,5 +1,6 @@
 parameters:
-  # Format to display dates and times in on the CLI. Note: Does not change how dates are stored, which are always UTC.
+  # Format to display dates and times in on the CLI for human-readable displays. Json displays will use RFC3339_EXTENDED
+  # Note: Does not change how dates are stored, which are always UTC.
   display.datetime.format: !php/const DateTime::RFC2822
   display.datetime.timezone: America/Los_Angeles
   # Doctrine configuration for storing Release data.
