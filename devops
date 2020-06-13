@@ -5,39 +5,31 @@
  * Some of this code is to replace functionality built into the Symfony kernel that we aren't using.
  */
 
-require __DIR__ . '/vendor/autoload.php';
+require __DIR__.'/vendor/autoload.php';
 
 use Monolog\ErrorHandler;
-use Monolog\Handler\PsrHandler;
 use Monolog\Logger;
 use Symfony\Component\Console\Application;
 use Symfony\Component\Console\Command\Command;
-use Symfony\Component\Console\Logger\ConsoleLogger;
 use Symfony\Component\Console\Output\ConsoleOutput;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\EventDispatcher\EventDispatcher;
 
-// Create the event dispatcher - needs to be before container so compiler passes can fire
+// Create the event dispatcher - needs to be before container so compiler passes can be created
 $dispatcher = new EventDispatcher();
 
 // Create the container
 /** @var ContainerBuilder $containerBuilder */
 $containerBuilder = require __DIR__.'/config/container.php';
 
-// Pre-emptive creation of the console output handler so we can feed it to Monolog early
-// solves an issue where events get logged before Symfony's listeners fire off, causing double errors
-$output = new ConsoleOutput();
-
 /** @var Logger $logger */
 $logger = $containerBuilder->get('Monolog\Logger');
-// By adding the output consolelogger early, can prevent Monolog from creating its own StreamHandler which can happen if
-// logs get created before a handler exists.
-$consoleLogger = new ConsoleLogger($output);
-$logger->pushHandler(new PsrHandler($consoleLogger));
 // Enables PHP errors to get to third party logging services
 ErrorHandler::register($logger);
 // At this point, we can disable php errors since Monolog will handle them (prevents duplicates)
-ini_set('display_errors', 'Off');
+// start-up errors will still go to console and PHP's native log file
+ini_set('display_errors', '0');
+ini_set('log_errors', '0');
 
 // Set up the Application
 $application = new Application('Devops');
@@ -49,5 +41,8 @@ foreach ($containerBuilder->findTaggedServiceIds('console.command') as $serviceI
     $command = $containerBuilder->get($serviceId);
     $application->add($command);
 }
+
+/** @var ConsoleOutput $output */
+$output = $containerBuilder->get('Symfony\Component\Console\Output\ConsoleOutput');
 
 $application->run(null, $output);

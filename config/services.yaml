@@ -19,7 +19,7 @@ services:
   # Support functionality for assisting in output display preferences.
   Devops\Display\DateTimeZone:
     class: DateTimeZone
-    arguments: ["%display.datetime.timezone%"]
+    arguments: ['%display.datetime.timezone%']
   # Additional custom wiring for auto-wired objects.
   Devops\Command\ReleaseCreateCommand:
     calls:
@@ -53,12 +53,15 @@ services:
     arguments:
       - main
     calls:
-      - [pushHandler, ['@Monolog\Handler\StreamHandler']]
-      - [pushProcessor, ['@Monolog\Processor\UidProcessor']]
-  Monolog\Handler\StreamHandler:
-    arguments:
-      - '%log_file_path%'
-      - '%log_file_verbosity%'
-  Monolog\Processor\UidProcessor: ~
+      - [pushHandler,   [!service { class: Monolog\Handler\PsrHandler,
+                                    arguments: ['@Symfony\Component\Console\Logger\ConsoleLogger'] }]]
+      - [pushHandler,   [!service { class: Monolog\Handler\StreamHandler,
+                                    arguments: ['%log_file_path%', '%log_file_verbosity%'] }]]
+      - [pushProcessor, [!service { class: Monolog\Processor\UidProcessor }]]
   Psr\Log\LoggerInterface:
     alias: Monolog\Logger
+  Symfony\Component\Console\Logger\ConsoleLogger:
+    arguments:
+      - '@Symfony\Component\Console\Output\ConsoleOutput'
+  ### SYMFONY CONSOLE APPLICATION HELPERS
+  Symfony\Component\Console\Output\ConsoleOutput: ~

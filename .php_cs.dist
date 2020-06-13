@@ -6,6 +6,7 @@ namespace PhpCsFixer;
 
 $finder = Finder::create()
     ->exclude(['bin', 'logs', 'vendor'])
+    ->name('devops')
     ->in(__DIR__);
 
 return Config::create()
