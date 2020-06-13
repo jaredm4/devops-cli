@@ -14,6 +14,8 @@ use Symfony\Component\Console\Event\ConsoleTerminateEvent;
 class LoggingListener
 {
     private LoggerInterface $logger;
+    // don't bother logging these commands
+    private array $commandBlackList = ['help', 'list'];
 
     public function __construct(LoggerInterface $logger)
     {
@@ -27,8 +29,7 @@ class LoggingListener
     {
         $commandName = $event->getCommand()->getName();
 
-        // don't bother logging these commands
-        if (in_array($commandName, ['help', 'list'])) {
+        if (in_array($commandName, $this->commandBlackList)) {
             return;
         }
 
@@ -48,8 +49,7 @@ class LoggingListener
         $statusCode = $event->getExitCode();
         $commandName = $event->getCommand()->getName();
 
-        // don't bother logging these commands
-        if (in_array($commandName, ['help', 'list'])) {
+        if (in_array($commandName, $this->commandBlackList)) {
             return;
         }
 
