@@ -6,6 +6,9 @@ services:
     autowire: true
     autoconfigure: true
     public: true
+    bind:
+      # any service asking for a LoggerInterface will get Monolog
+      Psr\Log\LoggerInterface: '@Monolog\Logger'
 
   Devops\:
     resource: '../src/*'
@@ -58,8 +61,6 @@ services:
       - [pushHandler,   [!service { class: Monolog\Handler\StreamHandler,
                                     arguments: ['%log_file_path%', '%log_file_verbosity%'] }]]
       - [pushProcessor, [!service { class: Monolog\Processor\UidProcessor }]]
-  Psr\Log\LoggerInterface:
-    alias: Monolog\Logger
   Symfony\Component\Console\Logger\ConsoleLogger:
     arguments:
       - '@Symfony\Component\Console\Output\ConsoleOutput'
