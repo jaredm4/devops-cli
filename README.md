@@ -20,6 +20,8 @@ By default, this tool will use SQLite to manage releases and deploys. For produc
 composer install
 # setup database schema, using SQLite by default (see config/parameters.yaml)
 vendor/bin/doctrine orm:schema-tool:update --force --dump-sql
+# optionally setup a symlink
+ln -s $(pwd)/devops ~/bin/devops
 ```
 
 ### Basic Usage
