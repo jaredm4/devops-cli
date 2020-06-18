@@ -37,5 +37,7 @@ trait ValidatorTrait
         if (!in_array($value, $optionSet)) {
             throw new InvalidOptionException($error_message);
         }
+
+        return $value;
     }
 }

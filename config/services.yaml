@@ -7,6 +7,7 @@ services:
     autoconfigure: true
     public: true
     bind:
+      $github_organization: '%github.organization%'
       # any service asking for a LoggerInterface will get Monolog
       Psr\Log\LoggerInterface: '@Monolog\Logger'
 
@@ -64,5 +65,9 @@ services:
   Symfony\Component\Console\Logger\ConsoleLogger:
     arguments:
       - '@Symfony\Component\Console\Output\ConsoleOutput'
+  ### GITHUB API
+  Github\Client:
+    calls:
+      - [authenticate, ['%github.tokenOrLogin%', '%github.password%', '%github.authMethod%']]
   ### SYMFONY CONSOLE APPLICATION HELPERS
   Symfony\Component\Console\Output\ConsoleOutput: ~

@@ -15,6 +15,8 @@ use Symfony\Component\Console\Output\OutputInterface;
  */
 trait ReleaseViewHelperTrait
 {
+    private array $headers = ['ID', 'Branch', 'App1 SHA', 'Created'];
+
     /**
      * Renders a table of Releases in a list format, headers on left. This can be useful when there are many columns and
      * horizontal space is limited.
@@ -31,14 +33,13 @@ trait ReleaseViewHelperTrait
                 $table->addRow(new TableSeparator());
             }
             $table->addRow([
-                implode("\n", [
-                    '<fg=green>Id</>',
-                    //'<fg=green>Master</>',
-                    '<fg=green>Created</>',
-                ]),
+                implode("\n", array_map(function ($header) {
+                    return "<fg=green>${header}</>";
+                }, $this->headers)),
                 implode("\n", [
                     $release->getId(),
-                    //$release->isMaster() ? 'X' : '', // TBD
+                    $release->getBranch(),
+                    $release->getApp1Sha(),
                     $release->getCreated()->setTimezone($this->getDateTimeZone())->format($this->getDateTimeFormat()),
                 ]),
             ]);
@@ -55,10 +56,12 @@ trait ReleaseViewHelperTrait
     {
         $table = new Table($output);
         $table->setHeaderTitle('Releases');
-        $table->setHeaders(['Id', 'Created']);
+        $table->setHeaders($this->headers);
         foreach ($releases as $release) {
             $table->addRow([
                 $release->getId(),
+                $release->getBranch(),
+                $release->getApp1Sha(),
                 $release->getCreated()->setTimezone($this->getDateTimeZone())->format($this->getDateTimeFormat()),
             ]);
         }

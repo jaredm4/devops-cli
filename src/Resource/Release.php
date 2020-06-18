@@ -20,16 +20,21 @@ class Release
     /**
      * @throws ORMException
      */
-    public function createRelease(): ReleaseEntity
+    public function createRelease(string $branch, string $app1_sha): ReleaseEntity
     {
         $release = new ReleaseEntity();
+        $release->setBranch($branch);
+        $release->setApp1Sha($app1_sha);
+
         $this->entityManager->persist($release);
 
         return $release;
     }
 
     /**
-     * @param int|null $limit Optionally limit the number of results to the last $limit rows
+     * @param int|null $limit @param int|null $limit Optionally limit the number of results to the last $limit rows
+     *
+     * @return ReleaseEntity[]
      */
     public function getReleases(int $limit = null): array
     {

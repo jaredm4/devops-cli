@@ -12,16 +12,26 @@ use JsonSerializable;
 /**
  * @ORM\Entity
  * @ORM\HasLifecycleCallbacks
- * @ORM\Table(name="releases")
+ * @ORM\Table(name="releases",options={"collate"="utf8_general_ci"})
  */
 class Release implements JsonSerializable
 {
     /**
+     * Allowing the ID to be NULL helps allow dry-run views to work.
+     *
      * @ORM\Id
      * @ORM\Column(type="integer")
      * @ORM\GeneratedValue
      */
-    protected int $id;
+    protected ?int $id = null;
+    /**
+     * @ORM\Column(type="string", length=255)
+     */
+    protected string $branch;
+    /**
+     * @ORM\Column(type="string", length=40)
+     */
+    protected string $app1_sha;
     /**
      * @ORM\Column(type="datetime")
      */
@@ -30,34 +40,51 @@ class Release implements JsonSerializable
     /**
      * @ORM\PrePersist
      */
-    public function onPrePersist()
+    public function onPrePersist(): void
     {
         $this->created = new DateTime('now', new DateTimeZone('UTC'));
     }
 
-    /**
-     * @return int
-     */
-    public function getId()
+    public function getId(): int
     {
         return $this->id;
     }
 
-    /**
-     * @return DateTime
-     */
-    public function getCreated()
+    public function getBranch(): string
+    {
+        return $this->branch;
+    }
+
+    public function setBranch($branch): self
+    {
+        $this->branch = $branch;
+
+        return $this;
+    }
+
+    public function getApp1Sha(): string
+    {
+        return $this->app1_sha;
+    }
+
+    public function setApp1Sha($app1_sha): self
+    {
+        $this->app1_sha = $app1_sha;
+
+        return $this;
+    }
+
+    public function getCreated(): \DateTimeInterface
     {
         return $this->created;
     }
 
-    /**
-     * @return array|mixed
-     */
-    public function jsonSerialize()
+    public function jsonSerialize(): array
     {
         return [
             'id' => $this->id,
+            'branch' => $this->branch,
+            'app1_sha' => $this->app1_sha,
             'created' => $this->created->format(DateTime::RFC3339_EXTENDED),
         ];
     }

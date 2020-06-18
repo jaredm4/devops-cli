@@ -27,6 +27,10 @@ class ReleaseListCommand extends Command
     private string $descriptionText = 'List Releases created by this tool.';
     private string $helpText = <<<'HELP'
         Lists all created Releases and their statuses, most recent first.
+
+        The <fg=yellow>--limit</> controls how many results are returned by this command. Large lists can be slow.
+
+        The <fg=yellow>--format</> changes how the results are returned from this command. Normally, a human readable representation of the Releases are returned, however json can be specified if used in an automated fashion.
         HELP;
     private array $outputFormats = ['table', 'list', 'json'];
 
@@ -50,12 +54,12 @@ class ReleaseListCommand extends Command
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $limit = $this->validateAndTransformInt($input->getOption('limit'), '--limit should be a non-zero positive integer.');
-        $this->validateOptionSet($input->getOption('format'), $this->outputFormats, '--format should be one of '.json_encode($this->outputFormats));
+        $format = $this->validateOptionSet($input->getOption('format'), $this->outputFormats, '--format should be one of '.json_encode($this->outputFormats));
 
         /** @var ReleaseEntity[] $releases */
         $releases = $this->releaseResource->getReleases($limit);
 
-        switch ($input->getOption('format')) {
+        switch ($format) {
             case 'table':
                 $this->renderReleaseTable($output, $releases);
                 break;

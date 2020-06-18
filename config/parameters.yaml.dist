@@ -14,3 +14,7 @@ parameters:
   # Where to write physical log files.
   log_file_path: "%root_dir%/logs/devops.log"
   log_file_verbosity: !php/const Monolog\Logger::NOTICE
+  github.tokenOrLogin: ~
+  github.password: ~
+  github.authMethod: !php/const Github\Client::AUTH_HTTP_TOKEN
+  github.organization: ~
