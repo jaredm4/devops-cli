@@ -53,8 +53,8 @@ class ReleaseListCommand extends Command
 
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
-        $limit = $this->validateAndTransformInt($input->getOption('limit'), '--limit should be a non-zero positive integer.');
-        $format = $this->validateOptionSet($input->getOption('format'), $this->outputFormats, '--format should be one of '.json_encode($this->outputFormats));
+        $limit = $this->validateAndTransformInt($input->getOption('limit'), 'The "--limit" option should be a non-zero positive integer.');
+        $format = $this->validateOptionSet($input->getOption('format'), $this->outputFormats, 'The "--format" option should be one of '.json_encode($this->outputFormats).'.');
 
         /** @var ReleaseEntity[] $releases */
         $releases = $this->releaseResource->getReleases($limit);

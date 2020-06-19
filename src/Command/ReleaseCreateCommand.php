@@ -65,7 +65,7 @@ class ReleaseCreateCommand extends Command
     {
         $branch = $input->getArgument('branch');
         $dry = $input->getOption('dry-run');
-        $format = $this->validateOptionSet($input->getOption('format'), $this->outputFormats, '--format should be one of '.json_encode($this->outputFormats));
+        $format = $this->validateOptionSet($input->getOption('format'), $this->outputFormats, 'The "--format" option should be one of '.json_encode($this->outputFormats).'.');
 
         if ($dry) {
             $this->logger->notice('DRY RUN ONLY. Will not save to database or execute any persisting API requests.');
