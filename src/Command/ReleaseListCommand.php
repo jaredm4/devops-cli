@@ -67,7 +67,6 @@ class ReleaseListCommand extends Command
                 $this->renderReleaseList($output, $releases);
                 break;
             case 'json':
-            default:
                 $output->write(json_encode($releases));
         }
 

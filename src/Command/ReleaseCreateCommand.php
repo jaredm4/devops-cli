@@ -41,12 +41,12 @@ class ReleaseCreateCommand extends Command
         HELP;
     private array $outputFormats = ['table', 'list', 'json'];
 
-    public function __construct(LoggerInterface $logger, ReleaseResource $releaseResource, GithubResource $githubResource, EntityManager $entityManager)
+    public function __construct(LoggerInterface $logger, EntityManager $entityManager, ReleaseResource $releaseResource, GithubResource $githubResource)
     {
         $this->logger = $logger;
+        $this->entityManager = $entityManager;
         $this->releaseResource = $releaseResource;
         $this->githubResource = $githubResource;
-        $this->entityManager = $entityManager;
 
         parent::__construct();
     }
@@ -72,6 +72,7 @@ class ReleaseCreateCommand extends Command
         }
 
         // Get SHA1s for each project
+        // todo project name should be services.yaml or similar?
         $app1_sha = $this->githubResource->getLatestCommitShaOrFail('devops-cli-dummy-app-1', 'master');
 
         // todo Verify Release doesn't already exist with SHA1s
@@ -100,12 +101,12 @@ class ReleaseCreateCommand extends Command
             case 'table':
                 $this->renderReleaseTable($output, [$release]);
                 break;
-            case 'list':
-                $this->renderReleaseList($output, [$release]);
-                break;
             case 'json':
-            default:
                 $output->write(json_encode([$release]));
+                break;
+            case 'list':
+            default:
+                $this->renderReleaseList($output, [$release]);
         }
 
         return 0;

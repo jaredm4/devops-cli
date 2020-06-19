@@ -16,7 +16,7 @@ trait ValidatorTrait
      * @param mixed  $value         Generally provided from \Symfony\Component\Console\Input\InputInterface::getOption
      * @param string $error_message error message logged and displayed to user
      *
-     * @return int Integer value of $value
+     * @return int Integer value transformed from $value
      */
     protected function validateAndTransformInt($value, $error_message): int
     {
@@ -31,6 +31,8 @@ trait ValidatorTrait
      * @param mixed  $value         Generally provided from \Symfony\Component\Console\Input\InputInterface::getOption
      * @param array  $optionSet     Array of allowed values to validate against
      * @param string $error_message error message logged and displayed to user
+     *
+     * @return mixed Returns untransformed $value
      */
     protected function validateOptionSet($value, array $optionSet, string $error_message)
     {

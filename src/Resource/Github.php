@@ -21,17 +21,23 @@ class Github
         $this->organization = $github_organization;
     }
 
-    public function getLatestCommitShaOrFail($repository, $branch)
+    /**
+     * @param string $repository Git repo name
+     * @param string $sha        Git ref (sha, tag, or branch) to find latest commit of
+     *
+     * @return mixed
+     */
+    public function getLatestCommitShaOrFail(string $repository, string $sha): string
     {
         $this->logger->info("Retrieving commit sha from GitHub for {$repository}.");
         $this->logger->debug('Github details follows. {org} {repo} {branch}', [
             'org' => $this->organization,
             'repo' => $repository,
-            'branch' => $branch,
+            'branch' => $sha,
         ]);
 
         $commits = $this->github->api('repo')->commits()->all($this->organization, $repository, [
-            'sha' => $branch,
+            'sha' => $sha,
             'per_page' => 1,
         ]);
 
