@@ -7,13 +7,16 @@ namespace Devops\Resource;
 use Devops\Entity\Release as ReleaseEntity;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\ORMException;
+use Psr\Log\LoggerInterface;
 
 class Release
 {
+    protected LoggerInterface $logger;
     protected EntityManager $entityManager;
 
-    public function __construct(EntityManager $entityManager)
+    public function __construct(LoggerInterface $logger, EntityManager $entityManager)
     {
+        $this->logger = $logger;
         $this->entityManager = $entityManager;
     }
 
@@ -41,5 +44,17 @@ class Release
         return $this->entityManager
             ->getRepository(ReleaseEntity::class)
             ->findBy([], ['created' => 'desc'], $limit);
+    }
+
+    public function releaseExists($app1_sha): bool
+    {
+        $this->logger->info('Checking if Release already exists against SHAs.');
+        /** @var ReleaseEntity|null $build */
+        $build = $this->entityManager->getRepository('Devops\Entity\Release')
+            ->findOneBy([
+                'app1_sha' => $app1_sha,
+            ]);
+
+        return !is_null($build);
     }
 }

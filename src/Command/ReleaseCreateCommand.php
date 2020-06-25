@@ -75,7 +75,15 @@ class ReleaseCreateCommand extends Command
         // todo project name should be services.yaml or similar?
         $app1_sha = $this->githubResource->getLatestCommitShaOrFail('devops-cli-dummy-app-1', 'master');
 
-        // todo Verify Release doesn't already exist with SHA1s
+        // Verify Release doesn't already exist with SHA1s
+        if ($this->releaseResource->releaseExists($app1_sha)) {
+            if ($dry) {
+                $this->logger->warning('Release already exists for current versions of Git repositories. --dry-run specified, continuing.');
+            } else {
+                /* @see \Devops\EventListener\ExitCodesListener::defineUserExitCodes() */
+                throw new \RuntimeException('Release already exists for current versions of Git repositories.', 64);
+            }
+        }
 
         // todo Verify artifacts exist (docker hub, ECR, s3, etc). Tests may have failed if they don't.
 

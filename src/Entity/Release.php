@@ -45,7 +45,10 @@ class Release implements JsonSerializable
         $this->created = new DateTime('now', new DateTimeZone('UTC'));
     }
 
-    public function getId(): int
+    /**
+     * @return int|null NULL if the entity has not yet been created
+     */
+    public function getId()
     {
         return $this->id;
     }

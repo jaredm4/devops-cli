@@ -45,6 +45,7 @@ it('creates release with resource', function ($format) {
         ],
     ]);
     $this->gr->expects('getLatestCommitShaOrFail')->atleast(1)->andReturn('abcde12345abcde12345abcde12345abcde12345');
+    $this->rr->expects('releaseExists')->once()->with('abcde12345abcde12345abcde12345abcde12345')->andReturns(false);
     $this->rr->expects('createRelease')->once()->andReturn($re);
     $this->em->expects('flush')->once();
     $this->logger->expects('notice')->with('Release created.', [1, $now]);
@@ -73,6 +74,17 @@ it('creates release with resource', function ($format) {
     assertEquals(0, $commandTester->getStatusCode());
 })->with(['list', 'table', 'json']);
 
+it('throws an exception if a release already exists', function () {
+    $this->gr->expects('getLatestCommitShaOrFail')->atleast(1)->andReturn('abcde12345abcde12345abcde12345abcde12345');
+    $this->rr->expects('releaseExists')->once()->with('abcde12345abcde12345abcde12345abcde12345')->andReturns(true);
+    $this->rr->expects('createRelease')->never();
+    $this->em->expects('flush')->never();
+
+    $command = $this->application->find('release:create');
+    $commandTester = new CommandTester($command);
+    $commandTester->execute([]);
+})->throws(\RuntimeException::class);
+
 it('should not persist during dry-run', function () {
     $now = new DateTime('2020-04-20 04:20:00', new DateTimeZone('UTC'));
     $re = mock(ReleaseEntity::class);
@@ -84,6 +96,34 @@ it('should not persist during dry-run', function () {
         'getCreated' => $now,
     ]);
     $this->gr->allows(['getLatestCommitShaOrFail' => 'abcde12345abcde12345abcde12345abcde12345']);
+    $this->rr->expects('releaseExists')->once()->with('abcde12345abcde12345abcde12345abcde12345')->andReturns(false);
+    $this->rr->allows(['createRelease' => $re]);
+    $this->em->expects('flush')->never();
+    $this->logger->expects('notice')->with('Release created.', [1, $now])->never();
+
+    $command = $this->application->find('release:create');
+    $commandTester = new CommandTester($command);
+    $commandTester->execute([
+        '--dry-run' => null,
+    ]);
+    $output = $commandTester->getDisplay();
+
+    assertStringEqualsFile('tests/fixtures/Unit/Command/release_create_command_0.txt', $output);
+    assertEquals(0, $commandTester->getStatusCode());
+});
+
+it('should allow releases that already exist during dry-run', function () {
+    $now = new DateTime('2020-04-20 04:20:00', new DateTimeZone('UTC'));
+    $re = mock(ReleaseEntity::class);
+
+    $re->allows([
+        'getId' => 1,
+        'getBranch' => 'foo-branch',
+        'getApp1Sha' => 'abcde12345abcde12345abcde12345abcde12345',
+        'getCreated' => $now,
+    ]);
+    $this->gr->allows(['getLatestCommitShaOrFail' => 'abcde12345abcde12345abcde12345abcde12345']);
+    $this->rr->expects('releaseExists')->once()->with('abcde12345abcde12345abcde12345abcde12345')->andReturns(true);
     $this->rr->allows(['createRelease' => $re]);
     $this->em->expects('flush')->never();
     $this->logger->expects('notice')->with('Release created.', [1, $now])->never();
