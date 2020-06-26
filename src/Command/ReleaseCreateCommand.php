@@ -80,6 +80,7 @@ class ReleaseCreateCommand extends Command implements DateHelperInterface, Proje
 
         // todo now, need to update releases entities and resource to allow dymanic number of shas
         $output->writeln(json_encode($project_shas));
+
         return 126;
         // Verify Release doesn't already exist with SHA1s
         if ($this->releaseResource->releaseExists($app1_sha)) {
