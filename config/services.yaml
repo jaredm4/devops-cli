@@ -19,20 +19,16 @@ services:
     # apply tags to necessary services
     Symfony\Component\Console\Command\Command:
       tags: ['console.command']
+    Devops\Command\DateHelperInterface:
+      calls:
+        - [setDateTimeZone, ['@Devops\Display\DateTimeZone']]
+        - [setDateTimeFormat, ['%display.datetime.format%']]
 
   # Support functionality for assisting in output display preferences.
   Devops\Display\DateTimeZone:
     class: DateTimeZone
     arguments: ['%display.datetime.timezone%']
   # Additional custom wiring for auto-wired objects.
-  Devops\Command\ReleaseCreateCommand:
-    calls:
-      - [setDateTimeZone, ['@Devops\Display\DateTimeZone']]
-      - [setDateTimeFormat, ['%display.datetime.format%']]
-  Devops\Command\ReleaseListCommand:
-    calls:
-      - [setDateTimeZone, ['@Devops\Display\DateTimeZone']]
-      - [setDateTimeFormat, ['%display.datetime.format%']]
   Devops\EventListener\ExitCodesListener:
     tags:
       - { name: console.event_listener, event: !php/const Symfony\Component\Console\ConsoleEvents::COMMAND, method: defineUserExitCodes }

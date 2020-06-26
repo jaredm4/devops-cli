@@ -12,7 +12,7 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 
-class ReleaseListCommand extends Command
+class ReleaseListCommand extends Command implements DateHelperInterface
 {
     use DateHelperTrait;
     use ReleaseViewHelperTrait;

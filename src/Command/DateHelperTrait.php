@@ -23,9 +23,6 @@ trait DateHelperTrait
         return $this->dateTimeZone;
     }
 
-    /**
-     * @required
-     */
     public function setDateTimeZone(DateTimeZone $dateTimeZone): void
     {
         $this->dateTimeZone = $dateTimeZone;
@@ -36,9 +33,6 @@ trait DateHelperTrait
         return $this->dateTimeFormat;
     }
 
-    /**
-     * @required
-     */
     public function setDateTimeFormat(string $dateTimeFormat): void
     {
         $this->dateTimeFormat = $dateTimeFormat;

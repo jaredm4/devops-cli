@@ -14,7 +14,7 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 
-class ReleaseCreateCommand extends Command
+class ReleaseCreateCommand extends Command implements DateHelperInterface
 {
     use DateHelperTrait;
     use ReleaseViewHelperTrait;
