@@ -1,0 +1,16 @@
+services:
+  _defaults:
+    autowire: true
+    autoconfigure: true
+    public: true
+    bind:
+      Psr\Log\LoggerInterface: '@Monolog\Logger'
+
+  _instanceof:
+    # apply tags to necessary services
+    Devops\Resource\ProjectInterface:
+      tags: ['devops.project']
+
+  Acme\:
+    resource: '../plugin/AcmeProject/src/*'
+    exclude: '../plugin/AcmeProject/src/{DependencyInjection,Entity,Migrations,Tests,Kernel.php}'

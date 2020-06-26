@@ -14,9 +14,10 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 
-class ReleaseCreateCommand extends Command implements DateHelperInterface
+class ReleaseCreateCommand extends Command implements DateHelperInterface, ProjectAwareInterface
 {
     use DateHelperTrait;
+    use ProjectAwareTrait;
     use ReleaseViewHelperTrait;
     use ValidatorTrait;
 
@@ -72,9 +73,14 @@ class ReleaseCreateCommand extends Command implements DateHelperInterface
         }
 
         // Get SHA1s for each project
-        // todo project name should be services.yaml or similar?
-        $app1_sha = $this->githubResource->getLatestCommitShaOrFail('devops-cli-dummy-app-1', 'master');
+        $project_shas = [];
+        foreach ($this->projectResources as $projectResource) {
+            $project_shas[] = $projectResource->getLatestCommitSha($branch);
+        }
 
+        // todo now, need to update releases entities and resource to allow dymanic number of shas
+        $output->writeln(json_encode($project_shas));
+        return 126;
         // Verify Release doesn't already exist with SHA1s
         if ($this->releaseResource->releaseExists($app1_sha)) {
             if ($dry) {

@@ -1,5 +1,6 @@
 imports:
   - { resource: parameters.yaml }
+  - { resource: projects.yaml }
 
 services:
   _defaults:
@@ -23,6 +24,8 @@ services:
       calls:
         - [setDateTimeZone, ['@Devops\Display\DateTimeZone']]
         - [setDateTimeFormat, ['%display.datetime.format%']]
+    Devops\Command\ProjectAwareInterface:
+      tags: ['devops.project.command']
 
   # Support functionality for assisting in output display preferences.
   Devops\Display\DateTimeZone:

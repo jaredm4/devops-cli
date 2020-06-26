@@ -21,7 +21,10 @@
   "minimum-stability": "dev",
   "prefer-stable": true,
   "autoload": {
-    "psr-4": {"Devops\\": "src/"}
+    "psr-4": {
+      "Devops\\": "src/",
+      "Acme\\": "plugin/AcmeProject/src/"
+    }
   },
   "autoload-dev": {
     "psr-4": {"Devops\\": "tests/"}
