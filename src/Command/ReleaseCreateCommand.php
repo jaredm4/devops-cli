@@ -77,27 +77,23 @@ class ReleaseCreateCommand extends Command implements DateHelperInterface, Proje
         foreach ($this->projectResources as $projectResource) {
             $project_shas[] = $projectResource->getLatestCommitSha($branch);
         }
-
-        // todo now, need to update releases entities and resource to allow dymanic number of shas
-        $output->writeln(json_encode($project_shas));
-
-        return 126;
+// todo update existence check and table/list views
         // Verify Release doesn't already exist with SHA1s
-        if ($this->releaseResource->releaseExists($app1_sha)) {
-            if ($dry) {
-                $this->logger->warning('Release already exists for current versions of Git repositories. --dry-run specified, continuing.');
-            } else {
-                /* @see \Devops\EventListener\ExitCodesListener::defineUserExitCodes() */
-                throw new \RuntimeException('Release already exists for current versions of Git repositories.', 64);
-            }
-        }
+//        if ($this->releaseResource->releaseExists($app1_sha)) {
+//            if ($dry) {
+//                $this->logger->warning('Release already exists for current versions of Git repositories. --dry-run specified, continuing.');
+//            } else {
+//                /* @see \Devops\EventListener\ExitCodesListener::defineUserExitCodes() */
+//                throw new \RuntimeException('Release already exists for current versions of Git repositories.', 64);
+//            }
+//        }
 
         // todo Verify artifacts exist (docker hub, ECR, s3, etc). Tests may have failed if they don't.
 
         // todo Load previous release to find JIRA tickets between releases
 
         // Create Release
-        $release = $this->releaseResource->createRelease($branch, $app1_sha);
+        $release = $this->releaseResource->createRelease($branch, $project_shas[0]);
 
         if ($dry) {
             $this->logger->notice('DRY RUN specified, Release not created.');

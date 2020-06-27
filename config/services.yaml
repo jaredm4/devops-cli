@@ -44,7 +44,7 @@ services:
   Doctrine\ORM\Configuration:
     factory: [Doctrine\ORM\Tools\Setup, createAnnotationMetadataConfiguration]
     arguments:
-      - ['%doctrine.orm.entity_dir%']
+      - '%doctrine.orm.entity_dirs%'
       - '%doctrine.orm.dev_mode%'
       - '%doctrine.orm.proxy_dir%'
       - ~

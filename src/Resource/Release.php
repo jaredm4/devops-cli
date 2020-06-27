@@ -11,8 +11,9 @@ use Psr\Log\LoggerInterface;
 
 class Release
 {
-    protected LoggerInterface $logger;
-    protected EntityManager $entityManager;
+    private LoggerInterface $logger;
+    private EntityManager $entityManager;
+    private string $releaseEntityClass = ReleaseEntity::class;
 
     public function __construct(LoggerInterface $logger, EntityManager $entityManager)
     {
@@ -21,11 +22,20 @@ class Release
     }
 
     /**
+     * Override the default Release entity.
+     * @param string $releaseEntityClass
+     */
+    public function setReleaseEntityClass(string $releaseEntityClass): void
+    {
+        $this->releaseEntityClass = $releaseEntityClass;
+    }
+
+    /**
      * @throws ORMException
      */
     public function createRelease(string $branch, string $app1_sha): ReleaseEntity
     {
-        $release = new ReleaseEntity();
+        $release = new $this->releaseEntityClass();
         $release->setBranch($branch);
         $release->setApp1Sha($app1_sha);
 
@@ -42,7 +52,7 @@ class Release
     public function getReleases(int $limit = null): array
     {
         return $this->entityManager
-            ->getRepository(ReleaseEntity::class)
+            ->getRepository($this->releaseEntityClass)
             ->findBy([], ['created' => 'desc'], $limit);
     }
 
@@ -50,7 +60,7 @@ class Release
     {
         $this->logger->info('Checking if Release already exists against SHAs.');
         /** @var ReleaseEntity|null $build */
-        $build = $this->entityManager->getRepository('Devops\Entity\Release')
+        $build = $this->entityManager->getRepository($this->releaseEntityClass)
             ->findOneBy([
                 'app1_sha' => $app1_sha,
             ]);

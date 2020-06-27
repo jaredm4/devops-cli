@@ -8,7 +8,7 @@ use Devops\Resource\Github;
 use Devops\Resource\ProjectInterface;
 use Psr\Log\LoggerInterface;
 
-class Project implements ProjectInterface
+class MyProject implements ProjectInterface
 {
     private LoggerInterface $logger;
     private Github $githubResource;

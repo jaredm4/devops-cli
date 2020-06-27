@@ -7,10 +7,12 @@ namespace Devops\Entity;
 use DateTime;
 use DateTimeZone;
 use Doctrine\ORM\Mapping as ORM;
+use Doctrine\ORM\Mapping\InheritanceType;
 use JsonSerializable;
 
 /**
  * @ORM\Entity
+ * @InheritanceType("SINGLE_TABLE")
  * @ORM\HasLifecycleCallbacks
  * @ORM\Table(name="releases",options={"collate"="utf8_general_ci"})
  */
@@ -28,10 +30,6 @@ class Release implements JsonSerializable
      * @ORM\Column(type="string", length=255)
      */
     protected string $branch;
-    /**
-     * @ORM\Column(type="string", length=40)
-     */
-    protected string $app1_sha;
     /**
      * @ORM\Column(type="datetime")
      */
@@ -65,18 +63,6 @@ class Release implements JsonSerializable
         return $this;
     }
 
-    public function getApp1Sha(): string
-    {
-        return $this->app1_sha;
-    }
-
-    public function setApp1Sha($app1_sha): self
-    {
-        $this->app1_sha = $app1_sha;
-
-        return $this;
-    }
-
     public function getCreated(): \DateTimeInterface
     {
         return $this->created;
@@ -87,7 +73,6 @@ class Release implements JsonSerializable
         return [
             'id' => $this->id,
             'branch' => $this->branch,
-            'app1_sha' => $this->app1_sha,
             'created' => $this->created->format(DateTime::RFC3339_EXTENDED),
         ];
     }

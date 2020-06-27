@@ -6,13 +6,13 @@ parameters:
   # Doctrine configuration for storing Release data.
   doctrine.orm.connection:
     driver: pdo_sqlite
-    path: "%root_dir%/db.sqlite"
-  doctrine.orm.entity_dir: "%root_dir%/src/Entity"
+    path: '%root_dir%/db.sqlite'
+  doctrine.orm.entity_dirs: ['%root_dir%/src/Entity']
   doctrine.orm.dev_mode: true
   doctrine.orm.proxy_dir: ~
   doctrine.orm.use_simple_annotation_reader: false
   # Where to write physical log files.
-  log_file_path: "%root_dir%/logs/devops.log"
+  log_file_path: '%root_dir%/logs/devops.log'
   log_file_verbosity: !php/const Monolog\Logger::NOTICE
   github.tokenOrLogin: ~
   github.password: ~
