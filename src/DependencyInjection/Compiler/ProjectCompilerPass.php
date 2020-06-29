@@ -21,28 +21,34 @@ class ProjectCompilerPass implements CompilerPassInterface
         $this->processRelease($container);
     }
 
+    /**
+     * Find the first project Resource tagged with 'devops.project' and set that as our official project resource.
+     * In the event more than 1 exists, only the first will be used.
+     */
     private function processProjects(ContainerBuilder $container): void
     {
         $commands = [];
         foreach ($container->findTaggedServiceIds('devops.project.command') as $id => $tags) {
             $commands[] = $container->getDefinition($id);
         }
-        foreach ($container->findTaggedServiceIds('devops.project') as $id => $tags) {
+        $resource = $container->findTaggedServiceIds('devops.project');
+        if (count($resource) > 0) {
             foreach ($commands as $command) {
-                $command->addMethodCall('addProjectResource', [new Reference($id)]);
+                $command->addMethodCall('setProjectResource', [new Reference(array_keys($resource)[0])]);
             }
         }
     }
 
     /**
      * Find the first Release entity tagged with 'devops.release' and use that as our official Release entity.
-     * In the event more than 1 exists, first will always be used.
-     * @param ContainerBuilder $container
+     * In the event more than 1 exists, only the first will be used.
      */
     private function processRelease(ContainerBuilder $container): void
     {
-        $release = $container->findTaggedServiceIds('devops.release');
-        $resource = $container->getDefinition(ReleaseResource::class);
-        $resource->addMethodCall('setReleaseEntityClass', [array_keys($release)[0]]);
+        $entity = $container->findTaggedServiceIds('devops.release');
+        if (count($entity) > 0) {
+            $resource = $container->getDefinition(ReleaseResource::class);
+            $resource->addMethodCall('setReleaseEntityClass', [array_keys($entity)[0]]);
+        }
     }
 }

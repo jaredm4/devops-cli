@@ -8,5 +8,5 @@ use Devops\Resource\ProjectInterface;
 
 interface ProjectAwareInterface
 {
-    public function addProjectResource(ProjectInterface $projectResource): void;
+    public function setProjectResource(ProjectInterface $projectResource): void;
 }

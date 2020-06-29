@@ -19,8 +19,11 @@ class MyProject implements ProjectInterface
         $this->githubResource = $githubResource;
     }
 
-    public function getLatestCommitSha($branch = 'master'): string
+    public function getLatestApplicationShas($branch = 'master'): array
     {
-        return $this->githubResource->getLatestCommitShaOrFail('devops-cli-dummy-app-1', $branch);
+        // the array's keys should match the property value on final release entity
+        return [
+            'dummy_app_sha' => $this->githubResource->getLatestCommitShaOrFail('devops-cli-dummy-app-1', $branch),
+        ];
     }
 }

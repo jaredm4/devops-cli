@@ -6,5 +6,11 @@ namespace Devops\Resource;
 
 interface ProjectInterface
 {
-    public function getLatestCommitSha($branch): string;
+    /**
+     * Return an array of repo names and commit shas based on provided branch.
+     * Ensure a commit is returned even if that branch does not exist (fallback to master recommended).
+     *
+     * @param $branch
+     */
+    public function getLatestApplicationShas($branch): array;
 }

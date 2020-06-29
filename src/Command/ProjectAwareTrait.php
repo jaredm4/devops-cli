@@ -8,16 +8,22 @@ use Devops\Resource\ProjectInterface;
 
 trait ProjectAwareTrait
 {
-    /** @var ProjectInterface[] */
-    private array $projectResources = [];
+    private ?ProjectInterface $projectResource = null;
 
     /**
      * Adds a dynamic Project to the scope of the Release.
      *
      * @see \Devops\DependencyInjection\Compiler\ProjectCompilerPass
+     *
+     * @param ProjectInterface $projectResource Your custom project logic, implementing ProjectInterface interface
      */
-    public function addProjectResource(ProjectInterface $projectResource): void
+    public function setProjectResource(ProjectInterface $projectResource): void
     {
-        $this->projectResources[] = $projectResource;
+        $this->projectResource = $projectResource;
+    }
+
+    public function getProjectResource(): ProjectInterface
+    {
+        return $this->projectResource;
     }
 }

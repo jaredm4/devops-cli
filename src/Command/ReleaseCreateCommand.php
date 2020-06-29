@@ -72,28 +72,25 @@ class ReleaseCreateCommand extends Command implements DateHelperInterface, Proje
             $this->logger->notice('DRY RUN ONLY. Will not save to database or execute any persisting API requests.');
         }
 
-        // Get SHA1s for each project
-        $project_shas = [];
-        foreach ($this->projectResources as $projectResource) {
-            $project_shas[] = $projectResource->getLatestCommitSha($branch);
-        }
-// todo update existence check and table/list views
+        // Get SHA1s for each app in our project
+        $application_shas = $this->getProjectResource()->getLatestApplicationShas($branch);
+
         // Verify Release doesn't already exist with SHA1s
-//        if ($this->releaseResource->releaseExists($app1_sha)) {
-//            if ($dry) {
-//                $this->logger->warning('Release already exists for current versions of Git repositories. --dry-run specified, continuing.');
-//            } else {
-//                /* @see \Devops\EventListener\ExitCodesListener::defineUserExitCodes() */
-//                throw new \RuntimeException('Release already exists for current versions of Git repositories.', 64);
-//            }
-//        }
+        if ($this->releaseResource->releaseExists($application_shas)) {
+            if ($dry) {
+                $this->logger->warning('Release already exists for current versions of Git repositories. --dry-run specified, continuing.');
+            } else {
+                /* @see \Devops\EventListener\ExitCodesListener::defineUserExitCodes() */
+                throw new \RuntimeException('Release already exists for current versions of Git repositories.', 64);
+            }
+        }
 
         // todo Verify artifacts exist (docker hub, ECR, s3, etc). Tests may have failed if they don't.
 
         // todo Load previous release to find JIRA tickets between releases
 
         // Create Release
-        $release = $this->releaseResource->createRelease($branch, $project_shas[0]);
+        $release = $this->releaseResource->createRelease($branch, $application_shas);
 
         if ($dry) {
             $this->logger->notice('DRY RUN specified, Release not created.');
@@ -113,7 +110,7 @@ class ReleaseCreateCommand extends Command implements DateHelperInterface, Proje
                 $this->renderReleaseTable($output, [$release]);
                 break;
             case 'json':
-                $output->write(json_encode([$release]));
+                $output->write(json_encode($release));
                 break;
             case 'list':
             default:

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Devops\Resource;
 
+use Devops\Entity\ApplicationReleaseInterface;
 use Devops\Entity\Release as ReleaseEntity;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\ORMException;
@@ -23,7 +24,6 @@ class Release
 
     /**
      * Override the default Release entity.
-     * @param string $releaseEntityClass
      */
     public function setReleaseEntityClass(string $releaseEntityClass): void
     {
@@ -33,11 +33,14 @@ class Release
     /**
      * @throws ORMException
      */
-    public function createRelease(string $branch, string $app1_sha): ReleaseEntity
+    public function createRelease(string $branch, array $application_shas): ReleaseEntity
     {
+        /** @var ReleaseEntity|ApplicationReleaseInterface $release */
         $release = new $this->releaseEntityClass();
         $release->setBranch($branch);
-        $release->setApp1Sha($app1_sha);
+        if (is_a($release, ApplicationReleaseInterface::class)) {
+            $release->setApplicationShas($application_shas);
+        }
 
         $this->entityManager->persist($release);
 
@@ -56,14 +59,15 @@ class Release
             ->findBy([], ['created' => 'desc'], $limit);
     }
 
-    public function releaseExists($app1_sha): bool
+    public function releaseExists(array $application_shas): bool
     {
         $this->logger->info('Checking if Release already exists against SHAs.');
-        /** @var ReleaseEntity|null $build */
+        /** @var ReleaseEntity|ApplicationReleaseInterface|null $build */
         $build = $this->entityManager->getRepository($this->releaseEntityClass)
-            ->findOneBy([
-                'app1_sha' => $app1_sha,
-            ]);
+            ->findOneBy($application_shas);
+//            ->findOneBy([
+//                'app1_sha' => $app1_sha,
+//            ]);
 
         return !is_null($build);
     }

@@ -4,35 +4,44 @@ declare(strict_types=1);
 
 namespace Acme\Entity;
 
+use Devops\Entity\ApplicationReleaseInterface;
 use Devops\Entity\Release;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
  * @ORM\Entity
  */
-class MyRelease extends Release
+class MyRelease extends Release implements ApplicationReleaseInterface
 {
     /**
      * @ORM\Column(type="string", length=40, nullable=true)
      */
-    protected string $app1_sha;
+    protected string $dummy_app_sha;
 
-    public function getApp1Sha(): string
+    /** {@inheritdoc} */
+    public function getApplicationShas(): array
     {
-        return $this->app1_sha;
+        return [
+            'dummy_app_sha' => $this->dummy_app_sha,
+        ];
     }
 
-    public function setApp1Sha($app1_sha): self
+    /** {@inheritdoc} */
+    public function setApplicationShas(array $application_shas): void
     {
-        $this->app1_sha = $app1_sha;
+        $this->dummy_app_sha = $application_shas['dummy_app_sha'];
+    }
 
-        return $this;
+    /** {@inheritdoc} */
+    public function getApplicationNames(): array
+    {
+        return [
+            'dummy_app_sha' => 'Dummy App Sha',
+        ];
     }
 
     public function jsonSerialize(): array
     {
-        return parent::jsonSerialize() + [
-            'app1_sha' => $this->app1_sha,
-        ];
+        return parent::jsonSerialize() + $this->getApplicationShas();
     }
 }
