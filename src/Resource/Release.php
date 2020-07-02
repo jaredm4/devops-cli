@@ -33,7 +33,7 @@ class Release
     /**
      * @throws ORMException
      */
-    public function createRelease(string $branch, array $application_shas): ReleaseEntity
+    public function createRelease(string $branch, array $application_shas = []): ReleaseEntity
     {
         /** @var ReleaseEntity|ApplicationReleaseInterface $release */
         $release = new $this->releaseEntityClass();
@@ -65,9 +65,6 @@ class Release
         /** @var ReleaseEntity|ApplicationReleaseInterface|null $build */
         $build = $this->entityManager->getRepository($this->releaseEntityClass)
             ->findOneBy($application_shas);
-//            ->findOneBy([
-//                'app1_sha' => $app1_sha,
-//            ]);
 
         return !is_null($build);
     }

@@ -35,17 +35,15 @@ it('creates release with resource', function ($format) {
     $re->allows([
         'getId' => 1,
         'getBranch' => 'foo-branch',
-        'getApp1Sha' => 'abcde12345abcde12345abcde12345abcde12345',
         'getCreated' => $now,
         'jsonSerialize' => [
             'id' => 1,
             'branch' => 'foo-branch',
-            'app1_sha' => 'abcde12345abcde12345abcde12345abcde12345',
             'created' => $now->format(DateTime::RFC3339_EXTENDED),
         ],
     ]);
     $this->gr->expects('getLatestCommitShaOrFail')->atleast(1)->andReturn('abcde12345abcde12345abcde12345abcde12345');
-    $this->rr->expects('releaseExists')->once()->with('abcde12345abcde12345abcde12345abcde12345')->andReturns(false);
+    $this->rr->expects('releaseExists')->once()->with(['abcde12345abcde12345abcde12345abcde12345'])->andReturns(false);
     $this->rr->expects('createRelease')->once()->andReturn($re);
     $this->em->expects('flush')->once();
     $this->logger->expects('notice')->with('Release created.', [1, $now]);

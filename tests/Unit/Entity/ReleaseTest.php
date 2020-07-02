@@ -35,12 +35,10 @@ it('returns serialized json', function () {
     $idProperty->setValue($release, 1);
     $createdProperty->setValue($release, $date);
     $release->setBranch('foo-branch');
-    $release->setApp1Sha('abcde12345abcde12345abcde12345abcde12345');
 
     assertEquals([
         'id' => 1,
         'branch' => 'foo-branch',
-        'app1_sha' => 'abcde12345abcde12345abcde12345abcde12345',
         'created' => $date->format(DateTime::RFC3339_EXTENDED),
     ], $release->jsonSerialize());
 });
