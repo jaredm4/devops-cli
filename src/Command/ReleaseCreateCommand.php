@@ -95,12 +95,13 @@ class ReleaseCreateCommand extends Command implements DateHelperInterface
         if ($dry) {
             $this->logger->notice('DRY RUN specified, Release not created.');
         } else {
-            // todo Create tags on Github.
-
-            // todo Optionally update JIRA issues with Release name
-
             // Flush ORM
             $this->entityManager->flush();
+
+            // Create tags on Github.
+            $this->githubResource->createLightweightTag('devops-cli-dummy-app-1', $app1_sha, $release->getId());
+
+            // todo Optionally update JIRA issues with Release name
 
             $this->logger->notice('Release created.', [$release->getId(), $release->getCreated()]);
         }

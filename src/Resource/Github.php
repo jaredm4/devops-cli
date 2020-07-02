@@ -6,6 +6,8 @@ namespace Devops\Resource;
 
 use Devops\Exception\GithubCommitNotFoundException;
 use Github\Client;
+use Github\Exception\ExceptionInterface;
+use Github\Exception\RuntimeException;
 use Psr\Log\LoggerInterface;
 
 class Github
@@ -46,5 +48,40 @@ class Github
         }
 
         return $commits[0]['sha'];
+    }
+
+    /**
+     * Create a lightweight Git tag in Github.
+     * Should we also create annotated tags for releases? Could grab user (tagger) details from chatops user?
+     *
+     * @param $repository
+     * @param $sha
+     * @param $tag
+     *
+     * @throws ExceptionInterface
+     */
+    public function createLightweightTag($repository, $sha, $tag)
+    {
+        $referenceData = [
+            'ref' => "refs/tags/{$tag}",
+            'sha' => $sha,
+        ];
+
+        $this->logger->info('Creating lightweight Git tag.', [
+            'organization' => $this->organization,
+            'repository' => $repository,
+            'reference_data' => $referenceData,
+        ]);
+
+        try {
+            $tag = $this->github->api('gitData')->references()->create($this->organization, $repository, $referenceData);
+        } catch (RuntimeException $ex) {
+            // ignore 'already exists' errors
+            // handles use-case where a release deploy fails near the end and needs to be rerun.
+            // todo this should be up to a team whether or not to ignore. make it a parameter?
+            if (422 !== $ex->getCode()) {
+                throw $ex;
+            }
+        }
     }
 }
