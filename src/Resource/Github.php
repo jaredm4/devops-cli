@@ -58,9 +58,11 @@ class Github
      * @param $sha
      * @param $tag
      *
+     * @return $this
+     *
      * @throws ExceptionInterface
      */
-    public function createLightweightTag($repository, $sha, $tag)
+    public function createLightweightTag(string $repository, string $sha, string $tag): self
     {
         $referenceData = [
             'ref' => "refs/tags/{$tag}",
@@ -74,7 +76,7 @@ class Github
         ]);
 
         try {
-            $tag = $this->github->api('gitData')->references()->create($this->organization, $repository, $referenceData);
+            $this->github->api('gitData')->references()->create($this->organization, $repository, $referenceData);
         } catch (RuntimeException $ex) {
             // ignore 'already exists' errors
             // handles use-case where a release deploy fails near the end and needs to be rerun.
@@ -83,5 +85,7 @@ class Github
                 throw $ex;
             }
         }
+
+        return $this;
     }
 }

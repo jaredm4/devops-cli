@@ -99,7 +99,7 @@ class ReleaseCreateCommand extends Command implements DateHelperInterface
             $this->entityManager->flush();
 
             // Create tags on Github.
-            $this->githubResource->createLightweightTag('devops-cli-dummy-app-1', $app1_sha, $release->getId());
+            $this->githubResource->createLightweightTag('devops-cli-dummy-app-1', $app1_sha, (string) $release->getId());
 
             // todo Optionally update JIRA issues with Release name
 

@@ -45,6 +45,7 @@ it('creates release with resource', function ($format) {
         ],
     ]);
     $this->gr->expects('getLatestCommitShaOrFail')->atleast(1)->andReturn('abcde12345abcde12345abcde12345abcde12345');
+    $this->gr->expects('createLightweightTag')->atleast(1)->with('devops-cli-dummy-app-1', 'abcde12345abcde12345abcde12345abcde12345', 1);
     $this->rr->expects('releaseExists')->once()->with('abcde12345abcde12345abcde12345abcde12345')->andReturns(false);
     $this->rr->expects('createRelease')->once()->andReturn($re);
     $this->em->expects('flush')->once();
