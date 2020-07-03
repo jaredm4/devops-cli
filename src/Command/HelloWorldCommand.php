@@ -45,13 +45,13 @@ class HelloWorldCommand extends Command
         // Using $output should be rare. Use logger for cli output so it can go to multiple destinations (log aggregator, slack, etc).
         $output->writeln("Hello, ${name}.");
 
-        $this->logger->debug('Test debug log.', [new \RuntimeException('Faux runtime exception.')]);
-        $this->logger->info('Test info log.', [new \RuntimeException('Faux runtime exception.')]);
-        $this->logger->notice('Test notice log.', [new \RuntimeException('Faux runtime exception.')]);
-        $this->logger->warning('Test warning log.', [new \RuntimeException('Faux runtime exception.')]);
-        $this->logger->error('Test error log.', [new \RuntimeException('Faux runtime exception.')]);
-        $this->logger->critical('Test critical log.', [new \RuntimeException('Faux runtime exception.')]);
-        $this->logger->alert('Test alert log.', [new \RuntimeException('Faux runtime exception.')]);
+        $this->logger->debug('Test debug log.', ['foo' => 'bar']);
+        $this->logger->info('Test info log.');
+        $this->logger->notice('Test notice log.');
+        $this->logger->warning('Test warning log.');
+        $this->logger->error('Test error log.');
+        $this->logger->critical('Test critical log.');
+        $this->logger->alert('Test alert log.');
         $this->logger->emergency('Test emergency log.', [new \RuntimeException('Faux runtime exception.')]);
 
         return 0;

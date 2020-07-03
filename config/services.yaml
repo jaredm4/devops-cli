@@ -52,18 +52,20 @@ services:
       - '%doctrine.orm.connection%'
       - '@Doctrine\ORM\Configuration'
   ### MONOLOG
+  Devops\Logger\ConsoleHandler:
+    arguments:
+      - '@Symfony\Component\Console\Output\ConsoleOutput'
+    calls:
+      - [setFormatter, [!service { class: Devops\Logger\Formatter\ConsoleLineFormatter,
+                                   arguments: [~, ~, false, true] }]]
   Monolog\Logger:
     arguments:
       - main
     calls:
-      - [pushHandler,   [!service { class: Monolog\Handler\PsrHandler,
-                                    arguments: ['@Symfony\Component\Console\Logger\ConsoleLogger'] }]]
+      - [pushHandler,   ['@Devops\Logger\ConsoleHandler']]
       - [pushHandler,   [!service { class: Monolog\Handler\StreamHandler,
                                     arguments: ['%log_file_path%', '%log_file_verbosity%'] }]]
       - [pushProcessor, [!service { class: Monolog\Processor\UidProcessor }]]
-  Symfony\Component\Console\Logger\ConsoleLogger:
-    arguments:
-      - '@Symfony\Component\Console\Output\ConsoleOutput'
   ### GITHUB API
   Github\Client:
     calls:
