@@ -94,6 +94,23 @@ it('displays json output of releases', function () {
     assertEquals(0, $commandTester->getStatusCode());
 });
 
+it('logs notice if there are no releases to show', function () {
+    $date1 = new DateTime('2020-04-20 04:20:00', new DateTimeZone('UTC'));
+    $date2 = new DateTime('2021-04-20 04:20:00', new DateTimeZone('UTC'));
+    $re = mock(ReleaseEntity::class);
+
+    $re->expects('getId')->never();
+    $this->rr->expects('getReleases')->once()->with(10)->andReturn([]);
+
+    $command = $this->application->find('release:list');
+    $commandTester = new CommandTester($command);
+    $commandTester->execute([]);
+    $output = $commandTester->getDisplay();
+
+    assertEquals('', $output);
+    assertEquals(0, $commandTester->getStatusCode());
+});
+
 it('throws exception when --limit fails validation', function ($limit) {
     $command = $this->application->find('release:list');
     $commandTester = new CommandTester($command);

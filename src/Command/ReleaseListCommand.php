@@ -56,8 +56,11 @@ class ReleaseListCommand extends Command implements DateHelperInterface
         $limit = $this->validateAndTransformInt($input->getOption('limit'), 'The "--limit" option should be a non-zero positive integer.');
         $format = $this->validateOptionSet($input->getOption('format'), $this->outputFormats, 'The "--format" option should be one of '.json_encode($this->outputFormats).'.');
 
-        /** @var ReleaseEntity[] $releases */
         $releases = $this->releaseResource->getReleases($limit);
+
+        if (0 == count($releases)) {
+            $this->logger->notice('No releases found.');
+        }
 
         switch ($format) {
             case 'table':
