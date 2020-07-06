@@ -31,11 +31,10 @@ class Github
      */
     public function getLatestCommitShaOrFail(string $repository, string $sha): string
     {
-        $this->logger->info("Retrieving commit sha from GitHub for {$repository}.");
-        $this->logger->debug('Github details follows.', [
+        $this->logger->info('Retrieving commit sha from GitHub.', [
             'org' => $this->organization,
             'repo' => $repository,
-            'branch' => $sha,
+            'sha' => $sha,
         ]);
 
         $commits = $this->github->api('repo')->commits()->all($this->organization, $repository, [

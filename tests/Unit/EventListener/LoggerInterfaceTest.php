@@ -17,7 +17,7 @@ it('logs command name', function () {
     // Kludge, but since class is final it can't be mocked
     $event = new ConsoleCommandEvent($this->command, $this->input, $this->output);
     $this->command->expects('getName')->atLeast(1)->andReturn('foo');
-    $this->logger->expects('notice')->once()->with('Beginning command `foo`.');
+    $this->logger->expects('notice')->once()->with('Beginning command.', ['foo']);
 
     $listener = new LoggingListener($this->logger);
     $listener->logCommandName($event);
@@ -37,7 +37,7 @@ it('logs command status on success', function () {
     // Kludge, but since class is final it can't be mocked
     $event = new ConsoleTerminateEvent($this->command, $this->input, $this->output, 0);
     $this->command->expects('getName')->atLeast(1)->andReturn('foo');
-    $this->logger->expects('notice')->once()->with('Finished command `foo`.');
+    $this->logger->expects('notice')->once()->with('Finished command.', ['foo']);
     $this->logger->expects('warning')->never();
 
     $listener = new LoggingListener($this->logger);
@@ -60,7 +60,7 @@ it('logs command status on error', function () {
     $event = new ConsoleTerminateEvent($this->command, $this->input, $this->output, 1);
     $this->command->expects('getName')->atLeast(1)->andReturn('foo');
     $this->logger->expects('notice')->never();
-    $this->logger->expects('warning')->once()->with('Command `foo` exited with status code 1.');
+    $this->logger->expects('warning')->once()->with('Command exited with a non-zero status code.', ['foo', 1]);
 
     $listener = new LoggingListener($this->logger);
     $listener->logCommandStatus($event);
@@ -71,7 +71,7 @@ it('sets exit code to 255 on excessive status code result', function () {
     $event = new ConsoleTerminateEvent($this->command, $this->input, $this->output, 9001);
     $this->command->expects('getName')->atLeast(1)->andReturn('foo');
     $this->logger->expects('notice')->never();
-    $this->logger->expects('warning')->once()->with('Command `foo` exited with status code 255.');
+    $this->logger->expects('warning')->once()->with('Command exited with a non-zero status code.', ['foo', 255]);
 
     $listener = new LoggingListener($this->logger);
     $listener->logCommandStatus($event);

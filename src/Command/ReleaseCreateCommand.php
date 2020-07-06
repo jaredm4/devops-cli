@@ -103,9 +103,10 @@ class ReleaseCreateCommand extends Command implements DateHelperInterface
 
             // todo Optionally update JIRA issues with Release name
 
-            $this->logger->notice('Release created.', [$release->getId(), $release->getCreated()]);
+            $this->logger->notice('Release created.', ['id' => $release->getId()]);
         }
 
+        // todo maybe we should do a child process call to release:list here instead of duplicated logic?
         switch ($format) {
             case 'table':
                 $this->renderReleaseTable($output, [$release]);

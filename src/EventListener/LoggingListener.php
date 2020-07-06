@@ -33,10 +33,7 @@ class LoggingListener
             return;
         }
 
-        $this->logger->notice(sprintf(
-            'Beginning command `%s`.',
-            $commandName
-        ));
+        $this->logger->notice('Beginning command.', [$commandName]);
     }
 
     /**
@@ -59,16 +56,12 @@ class LoggingListener
         }
 
         if (0 === $statusCode) {
-            $this->logger->notice(sprintf(
-                'Finished command `%s`.',
-                $commandName
-            ));
+            $this->logger->notice('Finished command.', [$commandName]);
         } else {
-            $this->logger->warning(sprintf(
-                'Command `%s` exited with status code %d.',
+            $this->logger->warning('Command exited with a non-zero status code.', [
                 $commandName,
-                $statusCode
-            ));
+                $statusCode,
+            ]);
         }
     }
 }

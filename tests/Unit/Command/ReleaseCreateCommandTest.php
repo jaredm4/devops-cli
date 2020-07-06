@@ -50,7 +50,7 @@ it('creates release with resource and returns it formatted', function ($format) 
     $this->rr->expects('releaseExists')->once()->with('abcde12345abcde12345abcde12345abcde12345')->andReturns(false);
     $this->rr->expects('createRelease')->once()->andReturn($re);
     $this->em->expects('flush')->once();
-    $this->logger->expects('notice')->with('Release created.', [1, $date]);
+    $this->logger->expects('notice')->with('Release created.', ['id' => 1]);
 
     $command = $this->application->find('release:create');
     $commandTester = new CommandTester($command);
@@ -88,7 +88,7 @@ it('should not persist during dry-run', function () {
     $this->rr->expects('releaseExists')->once()->with('abcde12345abcde12345abcde12345abcde12345')->andReturns(false);
     $this->rr->allows(['createRelease' => $re]);
     $this->em->expects('flush')->never();
-    $this->logger->expects('notice')->with('Release created.', [1, $now])->never();
+    $this->logger->expects('notice')->with('Release created.', ['id' => 1])->never();
 
     $command = $this->application->find('release:create');
     $commandTester = new CommandTester($command);

@@ -48,12 +48,14 @@ class Release
 
     public function releaseExists($app1_sha): bool
     {
-        $this->logger->info('Checking if Release already exists against SHAs.');
+        $shas_query = [
+            'app1_sha' => $app1_sha,
+        ];
+
+        $this->logger->info('Checking if Release already exists against Git SHAs.', $shas_query);
         /** @var ReleaseEntity|null $build */
         $build = $this->entityManager->getRepository('Devops\Entity\Release')
-            ->findOneBy([
-                'app1_sha' => $app1_sha,
-            ]);
+            ->findOneBy($shas_query);
 
         return !is_null($build);
     }
