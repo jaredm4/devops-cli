@@ -1,1 +1,0 @@
-[{"id":1,"branch":"master","app1_sha":"abcde12345abcde12345abcde12345abcde12345","created":"2020-04-20T04:20:00.000+00:00"},{"id":2,"branch":"foo-branch","app1_sha":"bcde12345abcde12345abcde12345abcde12345a","created":"2021-04-20T04:20:00.000+00:00"}]

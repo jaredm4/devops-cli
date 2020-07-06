@@ -8,6 +8,7 @@ use Devops\Resource\Github;
 use Devops\Resource\Release as ReleaseResource;
 use Doctrine\ORM\EntityManager;
 use Symfony\Component\Console\Application;
+use Symfony\Component\Console\Exception\InvalidOptionException;
 use Symfony\Component\Console\Tester\CommandTester;
 
 beforeEach(function () {
@@ -28,20 +29,20 @@ afterEach(function () {
     Mockery::close();
 });
 
-it('creates release with resource', function ($format) {
-    $now = new DateTime('2020-04-20 04:20:00', new DateTimeZone('UTC'));
+it('creates release with resource and returns it formatted', function ($format) {
+    $date = new DateTime('2020-04-20 04:20:00', new DateTimeZone('UTC'));
     $re = mock(ReleaseEntity::class);
 
     $re->allows([
         'getId' => 1,
         'getBranch' => 'foo-branch',
         'getApp1Sha' => 'abcde12345abcde12345abcde12345abcde12345',
-        'getCreated' => $now,
+        'getCreated' => $date,
         'jsonSerialize' => [
             'id' => 1,
             'branch' => 'foo-branch',
             'app1_sha' => 'abcde12345abcde12345abcde12345abcde12345',
-            'created' => $now->format(DateTime::RFC3339_EXTENDED),
+            'created' => $date->format(DateTime::RFC3339_EXTENDED),
         ],
     ]);
     $this->gr->expects('getLatestCommitShaOrFail')->atleast(1)->andReturn('abcde12345abcde12345abcde12345abcde12345');
@@ -49,7 +50,7 @@ it('creates release with resource', function ($format) {
     $this->rr->expects('releaseExists')->once()->with('abcde12345abcde12345abcde12345abcde12345')->andReturns(false);
     $this->rr->expects('createRelease')->once()->andReturn($re);
     $this->em->expects('flush')->once();
-    $this->logger->expects('notice')->with('Release created.', [1, $now]);
+    $this->logger->expects('notice')->with('Release created.', [1, $date]);
 
     $command = $this->application->find('release:create');
     $commandTester = new CommandTester($command);
@@ -58,20 +59,7 @@ it('creates release with resource', function ($format) {
     ]);
     $output = $commandTester->getDisplay();
 
-    switch ($format) {
-        case 'table':
-            $fixture = 'tests/fixtures/Unit/Command/release_create_command_1.txt';
-            break;
-        case 'json':
-            $fixture = 'tests/fixtures/Unit/Command/release_create_command_2.txt';
-            break;
-        case 'list':
-            $fixture = 'tests/fixtures/Unit/Command/release_create_command_0.txt';
-            break;
-        default:
-            throw new RuntimeException('An unsupported format was specified in test.');
-    }
-    assertStringEqualsFile($fixture, $output);
+    assertStringEqualsFile("tests/fixtures/Unit/Command/release_create_command_${format}.txt", $output);
     assertEquals(0, $commandTester->getStatusCode());
 })->with(['list', 'table', 'json']);
 
@@ -109,7 +97,7 @@ it('should not persist during dry-run', function () {
     ]);
     $output = $commandTester->getDisplay();
 
-    assertStringEqualsFile('tests/fixtures/Unit/Command/release_create_command_0.txt', $output);
+    assertStringEqualsFile('tests/fixtures/Unit/Command/release_create_command_list.txt', $output);
     assertEquals(0, $commandTester->getStatusCode());
 });
 
@@ -136,6 +124,30 @@ it('should allow releases that already exist during dry-run', function () {
     ]);
     $output = $commandTester->getDisplay();
 
-    assertStringEqualsFile('tests/fixtures/Unit/Command/release_create_command_0.txt', $output);
+    assertStringEqualsFile('tests/fixtures/Unit/Command/release_create_command_list.txt', $output);
     assertEquals(0, $commandTester->getStatusCode());
 });
+
+it('throws exception when --limit fails validation', function ($limit) {
+    $command = $this->application->find('release:create');
+    $commandTester = new CommandTester($command);
+    $commandTester->execute([
+        '--limit' => $limit,
+    ]);
+
+    assertNotEquals(0, $commandTester->getStatusCode());
+})->with([
+    '-1', 'a', '1.1', 1.2, 0,
+])->throws(InvalidOptionException::class);
+
+it('throws exception when --format fails validation', function ($format) {
+    $command = $this->application->find('release:create');
+    $commandTester = new CommandTester($command);
+    $commandTester->execute([
+        '--format' => $format,
+    ]);
+
+    assertNotEquals(0, $commandTester->getStatusCode());
+})->with([
+    'foobar', 'true', 1,
+])->throws(InvalidOptionException::class);

@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Devops\Command;
 
-use Devops\Entity\Release as ReleaseEntity;
 use Devops\Resource\Release as ReleaseResource;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Console\Command\Command;
