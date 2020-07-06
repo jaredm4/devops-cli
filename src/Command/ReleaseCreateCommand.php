@@ -72,7 +72,7 @@ class ReleaseCreateCommand extends Command implements DateHelperInterface
         }
 
         // Get SHA1s for each project
-        // todo project name should be services.yaml or similar?
+        // todo project name should be parameters.yaml or similar?
         $app1_sha = $this->githubResource->getLatestCommitShaOrFail('devops-cli-dummy-app-1', 'master');
 
         // Verify Release doesn't already exist with SHA1s
@@ -93,7 +93,7 @@ class ReleaseCreateCommand extends Command implements DateHelperInterface
         $release = $this->releaseResource->createRelease($branch, $app1_sha);
 
         if ($dry) {
-            $this->logger->notice('DRY RUN specified, Release not created.');
+            $this->logger->notice('DRY RUN specified, Release not finalized.');
         } else {
             // Flush ORM
             $this->entityManager->flush();
