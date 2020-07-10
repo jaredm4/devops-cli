@@ -61,16 +61,7 @@ class ReleaseListCommand extends Command implements DateHelperInterface
             $this->logger->notice('No releases found.');
         }
 
-        switch ($format) {
-            case 'table':
-                $this->renderReleaseTable($output, $releases);
-                break;
-            case 'list':
-                $this->renderReleaseList($output, $releases);
-                break;
-            case 'json':
-                $output->write(json_encode($releases));
-        }
+        $this->render($output, $releases, $format);
 
         return 0;
     }

@@ -14,11 +14,11 @@ use DateTimeZone;
 trait DateHelperTrait
 {
     /** Timezone to convert the dates in for display only. */
-    protected DateTimeZone $dateTimeZone;
+    private DateTimeZone $dateTimeZone;
     /** Date format for all dates viewed from console. */
-    protected string $dateTimeFormat;
+    private string $dateTimeFormat;
 
-    protected function getDateTimeZone(): DateTimeZone
+    private function getDateTimeZone(): DateTimeZone
     {
         return $this->dateTimeZone;
     }
@@ -28,7 +28,7 @@ trait DateHelperTrait
         $this->dateTimeZone = $dateTimeZone;
     }
 
-    protected function getDateTimeFormat(): string
+    private function getDateTimeFormat(): string
     {
         return $this->dateTimeFormat;
     }

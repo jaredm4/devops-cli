@@ -8,7 +8,6 @@ use Devops\Resource\Github;
 use Devops\Resource\Release as ReleaseResource;
 use Doctrine\ORM\EntityManager;
 use Symfony\Component\Console\Application;
-use Symfony\Component\Console\Exception\InvalidOptionException;
 use Symfony\Component\Console\Tester\CommandTester;
 
 beforeEach(function () {
@@ -128,18 +127,6 @@ it('should allow releases that already exist during dry-run', function () {
     assertEquals(0, $commandTester->getStatusCode());
 });
 
-it('throws exception when --limit fails validation', function ($limit) {
-    $command = $this->application->find('release:create');
-    $commandTester = new CommandTester($command);
-    $commandTester->execute([
-        '--limit' => $limit,
-    ]);
-
-    assertNotEquals(0, $commandTester->getStatusCode());
-})->with([
-    '-1', 'a', '1.1', 1.2, 0,
-])->throws(InvalidOptionException::class);
-
 it('throws exception when --format fails validation', function ($format) {
     $command = $this->application->find('release:create');
     $commandTester = new CommandTester($command);
@@ -150,4 +137,4 @@ it('throws exception when --format fails validation', function ($format) {
     assertNotEquals(0, $commandTester->getStatusCode());
 })->with([
     'foobar', 'true', 1,
-])->throws(InvalidOptionException::class);
+])->throws(UnexpectedValueException::class);

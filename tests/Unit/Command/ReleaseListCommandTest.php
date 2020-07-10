@@ -6,7 +6,6 @@ use Devops\Command\ReleaseListCommand;
 use Devops\Entity\Release as ReleaseEntity;
 use Devops\Resource\Release as ReleaseResource;
 use Symfony\Component\Console\Application;
-use Symfony\Component\Console\Exception\InvalidOptionException;
 use Symfony\Component\Console\Tester\CommandTester;
 
 beforeEach(function () {
@@ -109,7 +108,7 @@ it('throws exception when --limit fails validation', function ($limit) {
     assertNotEquals(0, $commandTester->getStatusCode());
 })->with([
     '-1', 'a', '1.1', 1.2, 0,
-])->throws(InvalidOptionException::class);
+])->throws(UnexpectedValueException::class);
 
 it('throws exception when --format fails validation', function ($format) {
     $command = $this->application->find('release:list');
@@ -121,4 +120,4 @@ it('throws exception when --format fails validation', function ($format) {
     assertNotEquals(0, $commandTester->getStatusCode());
 })->with([
     'foobar', 'true', 1,
-])->throws(InvalidOptionException::class);
+])->throws(UnexpectedValueException::class);

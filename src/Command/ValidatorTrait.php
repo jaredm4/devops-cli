@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Devops\Command;
 
-use Symfony\Component\Console\Exception\InvalidOptionException;
+use UnexpectedValueException;
 
 /**
  * Trait TransformerTrait
@@ -18,10 +18,10 @@ trait ValidatorTrait
      *
      * @return int Integer value transformed from $value
      */
-    protected function validateAndTransformInt($value, $error_message): int
+    private function validateAndTransformInt($value, $error_message): int
     {
         if (!ctype_digit((string) $value) || $value < 1) {
-            throw new InvalidOptionException($error_message);
+            throw new UnexpectedValueException($error_message);
         }
 
         return (int) $value;
@@ -34,10 +34,10 @@ trait ValidatorTrait
      *
      * @return mixed Returns untransformed $value
      */
-    protected function validateOptionSet($value, array $optionSet, string $error_message)
+    private function validateOptionSet($value, array $optionSet, string $error_message)
     {
         if (!in_array($value, $optionSet)) {
-            throw new InvalidOptionException($error_message);
+            throw new UnexpectedValueException($error_message);
         }
 
         return $value;

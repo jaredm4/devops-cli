@@ -106,18 +106,7 @@ class ReleaseCreateCommand extends Command implements DateHelperInterface
             $this->logger->notice('Release created.', ['id' => $release->getId()]);
         }
 
-        // todo maybe we should do a child process call to release:list here instead of duplicated logic?
-        switch ($format) {
-            case 'table':
-                $this->renderReleaseTable($output, [$release]);
-                break;
-            case 'json':
-                $output->write(json_encode([$release]));
-                break;
-            case 'list':
-            default:
-                $this->renderReleaseList($output, [$release]);
-        }
+        $this->render($output, [$release], $format);
 
         return 0;
     }

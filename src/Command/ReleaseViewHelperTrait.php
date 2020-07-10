@@ -23,7 +23,7 @@ trait ReleaseViewHelperTrait
      *
      * @param Release[] $releases
      */
-    protected function renderReleaseList(OutputInterface $output, array $releases): void
+    private function renderReleaseList(OutputInterface $output, array $releases): void
     {
         $table = new Table($output);
         $count = 0;
@@ -52,7 +52,7 @@ trait ReleaseViewHelperTrait
      *
      * @param Release[] $releases
      */
-    protected function renderReleaseTable(OutputInterface $output, array $releases): void
+    private function renderReleaseTable(OutputInterface $output, array $releases): void
     {
         $table = new Table($output);
         $table->setHeaderTitle('Releases');
@@ -66,5 +66,26 @@ trait ReleaseViewHelperTrait
             ]);
         }
         $table->render();
+    }
+
+    /**
+     * AIO render method to render releases in specified format.
+     *
+     * @param Release[] $releases
+     * @param string    $format   One of: table, list, json
+     */
+    private function render(OutputInterface $output, array $releases, string $format): void
+    {
+        switch ($format) {
+            case 'table':
+                $this->renderReleaseTable($output, $releases);
+                break;
+            case 'json':
+                $output->write(json_encode($releases));
+                break;
+            case 'list':
+            default:
+                $this->renderReleaseList($output, $releases);
+        }
     }
 }
