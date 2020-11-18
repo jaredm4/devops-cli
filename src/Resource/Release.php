@@ -23,11 +23,12 @@ class Release
     /**
      * @throws ORMException
      */
-    public function createRelease(string $branch, string $app1_sha): ReleaseEntity
+    public function createRelease(string $branch, string $app1_sha, string $app2_sha): ReleaseEntity
     {
         $release = new ReleaseEntity();
         $release->setBranch($branch);
         $release->setApp1Sha($app1_sha);
+        $release->setApp2Sha($app2_sha);
 
         $this->entityManager->persist($release);
 
@@ -46,10 +47,11 @@ class Release
             ->findBy([], ['created' => 'desc'], $limit);
     }
 
-    public function releaseExists($app1_sha): bool
+    public function releaseExists($app1_sha, $app2_sha): bool
     {
         $shas_query = [
             'app1_sha' => $app1_sha,
+            'app2_sha' => $app2_sha,
         ];
 
         $this->logger->info('Checking if Release already exists against Git SHAs.', $shas_query);

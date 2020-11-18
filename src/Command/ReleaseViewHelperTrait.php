@@ -15,7 +15,7 @@ use Symfony\Component\Console\Output\OutputInterface;
  */
 trait ReleaseViewHelperTrait
 {
-    private array $headers = ['ID', 'Branch', 'App1 SHA', 'Created'];
+    private array $headers = ['ID', 'Branch', 'Auto Acceptance Tests', 'Approved', 'App1 SHA', 'App2 SHA', 'Created'];
 
     /**
      * Renders a table of Releases in a list format, headers on left. This can be useful when there are many columns and
@@ -39,7 +39,10 @@ trait ReleaseViewHelperTrait
                 implode("\n", [
                     $release->getId(),
                     $release->getBranch(),
+                    true ? '✔' : '',
+                    false ? '✔' : '',
                     $release->getApp1Sha(),
+                    $release->getApp2Sha(),
                     $release->getCreated()->setTimezone($this->getDateTimeZone())->format($this->getDateTimeFormat()),
                 ]),
             ]);
@@ -61,7 +64,10 @@ trait ReleaseViewHelperTrait
             $table->addRow([
                 $release->getId(),
                 $release->getBranch(),
+                true ? '✔' : '',
+                false ? '✔' : '',
                 $release->getApp1Sha(),
+                $release->getApp2Sha(),
                 $release->getCreated()->setTimezone($this->getDateTimeZone())->format($this->getDateTimeFormat()),
             ]);
         }

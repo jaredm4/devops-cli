@@ -33,6 +33,10 @@ class Release implements JsonSerializable
      */
     protected string $app1_sha;
     /**
+     * @ORM\Column(type="string", length=40)
+     */
+    protected string $app2_sha;
+    /**
      * @ORM\Column(type="datetime")
      */
     protected DateTime $created;
@@ -77,6 +81,18 @@ class Release implements JsonSerializable
         return $this;
     }
 
+    public function getApp2Sha(): string
+    {
+        return $this->app2_sha;
+    }
+
+    public function setApp2Sha($app2_sha): self
+    {
+        $this->app2_sha = $app2_sha;
+
+        return $this;
+    }
+
     public function getCreated(): \DateTimeInterface
     {
         return $this->created;
@@ -88,6 +104,7 @@ class Release implements JsonSerializable
             'id' => $this->id,
             'branch' => $this->branch,
             'app1_sha' => $this->app1_sha,
+            'app2_sha' => $this->app2_sha,
             'created' => $this->created->format(DateTime::RFC3339_EXTENDED),
         ];
     }

@@ -30,13 +30,13 @@ class ReleaseCreateCommand extends Command implements DateHelperInterface
 
     private string $descriptionText = 'Create a Release of your application.';
     private string $helpText = <<<'HELP'
-        A <fg=green>Release</> is compromised of Git commits of all your packages in the application for a given deployment. 
+        A <fg=green>Release</> is compromised of Git commits of all your packages in the application for a given deployment.
         An example is if you have a PHP and a JavaScript repository, a Release will contain the Git SHA-1 for each at time of creation.
         Releases are what get deployed in release:deploy.
-        
+
         The <fg=yellow>--branch</> argument is used to verify if a <fg=green>Release</> can get deployed to Production. Only master branch <fg=green>Releases</> can go to Production.
         Otherwise, it is mostly informational.
-        
+
         The <fg=yellow>--format</> changes how the results are returned from this command. Normally, a human readable representation of the Release is returned, however json can be specified if used in an automated fashion.
         HELP;
     private array $outputFormats = ['table', 'list', 'json'];
@@ -74,9 +74,10 @@ class ReleaseCreateCommand extends Command implements DateHelperInterface
         // Get SHA1s for each project
         // todo project name should be parameters.yaml or similar?
         $app1_sha = $this->githubResource->getLatestCommitShaOrFail('devops-cli-dummy-app-1', 'master');
+        $app2_sha = '0beec7b5ea3f0fdbc95d0dd47f3c5bc275da8a33';
 
         // Verify Release doesn't already exist with SHA1s
-        if ($this->releaseResource->releaseExists($app1_sha)) {
+        if ($this->releaseResource->releaseExists($app1_sha, $app2_sha)) {
             if ($dry) {
                 $this->logger->warning('Release already exists for current versions of Git repositories. --dry-run specified, continuing.');
             } else {
@@ -90,7 +91,7 @@ class ReleaseCreateCommand extends Command implements DateHelperInterface
         // todo Load previous release to find JIRA tickets between releases
 
         // Create Release
-        $release = $this->releaseResource->createRelease($branch, $app1_sha);
+        $release = $this->releaseResource->createRelease($branch, $app1_sha, $app2_sha);
 
         if ($dry) {
             $this->logger->notice('DRY RUN specified, Release not finalized.');
